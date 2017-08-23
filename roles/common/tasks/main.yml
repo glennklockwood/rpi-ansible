@@ -1,0 +1,83 @@
+---
+### Set hostname
+- name: set hostname
+  hostname: name={{ inventory_hostname }}
+  when: inventory_hostname is defined and ansible_nodename is defined
+
+- name: update /etc/hosts with new hostname
+  lineinfile:
+    dest=/etc/hosts
+    regexp="^{{ ansible_default_ipv4.address }}"
+    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ inventory_hostname }}.local{{'\t'}}{{ inventory_hostname }}"
+    state=present
+
+- name: get rid of default 127.0.1.1 binding
+  lineinfile:
+    dest=/etc/hosts
+    regexp="^127.0.1.1"
+    state=absent
+
+### Configure /etc/hosts
+- name: ensure that all local hosts are in /etc/hosts
+  lineinfile:
+    dest=/etc/hosts
+    line="{{ item.ip }}{{'\t'}}{{ item.name }}.local{{'\t'}}{{ item.name }}"
+    state=present
+  with_items: etc_hosts_contents
+
+### Set timezone
+- name: set /etc/timezone to America/Los_Angeles
+  copy: src=etc/timezone
+        dest=/etc/timezone
+        owner=root
+        group=root
+        mode=0644
+        backup=yes
+  notify:
+      - changed timezone
+
+### Uninstall Raspbian bloat
+- name: remove raspbian bloat
+  apt:
+    name="{{ item }}"
+    state=absent
+  with_items:
+    - wolfram-engine
+    - libreoffice*
+    - scratch
+    - minecraft-pi
+    - python-minecraftpi 
+    - python3-minecraftpi
+    - sonic-pi
+    - dillo
+    - gpiciew
+    - penguinspuzzle
+
+### Install required software
+- name: install basic software environment
+  apt:
+    name="{{ item }}"
+    state=present
+    update_cache=yes
+  with_items:
+    - vim
+
+### Create user accounts
+- name: create users
+  user: name="{{ item.name }}"
+        comment="{{ item.comment }}"
+        group="{{ item.group }}"
+        groups="{{ item.groups }}"
+        uid="{{ item.uid }}"
+        state=present
+  with_items: create_users
+  tags: [ 'users' ]
+
+- name: install ssh pubkeys for new users
+  authorized_key: user="{{ item.name }}"
+                  key="{{ item.pubkey }}"
+                  state=present
+  with_items: create_users
+  tags: [ 'users' ]
+
+### TODO: disable the 'pi' user somehow

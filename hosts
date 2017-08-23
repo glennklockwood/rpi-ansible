@@ -1,0 +1,1 @@
+cloverfield ansible_host=192.168.1.153 ansible_connection=local
