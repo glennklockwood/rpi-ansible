@@ -1,8 +1,9 @@
 ---
 ### Hosts that must be present in /etc/hosts
 etc_hosts_contents:
-  - { name: 'cloverfield', ip: '192.168.1.153' }
   - { name: 'clovermill',  ip: '192.168.1.149' }
+  - { name: 'cloverfield', ip: '192.168.1.153' }
+  - { name: 'clovermine',  ip: '192.168.1.154' }
 
 ### Users that must be present on the system
 create_users:

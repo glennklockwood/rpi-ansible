@@ -1,1 +1,3 @@
-cloverfield ansible_host=192.168.1.153 ansible_connection=local
+cloverfield ansible_host=192.168.1.153
+clovermine  ansible_host=192.168.1.154
+clovermill  ansible_host=192.168.1.149

@@ -1,7 +1,4 @@
 ---
 - hosts: all
-  remote_user: pi
-  sudo: yes
-  sudo_user: root
   roles:
     - role: common
