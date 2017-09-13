@@ -13,14 +13,20 @@ used by anyone but me.
 If you want to use these playbooks to make a Raspberry Pi self-configure,
 install Ansible by doing the following:
 
-    # apt-get install ansible
     # pip install --user ansible
     # ssh-keygen
     # ssh-copy-id localhost
 
+Note that `apt-get install ansible` is not a great idea because it's almost
+certainly out of date, and the documentation online will talk about mainline
+features that don't exist in the distro-provided version.
+
 You can ensure that Ansible is able to configure using the following:
 
     $ ansible -i hosts all -m ping
+
+You can also ensure that authentication also works.
+
     $ ansible -i hosts -u pi --sudo-user root all -a "/usr/bin/id -u"
 
 ## Running the Playbook
@@ -30,7 +36,7 @@ user (`pi`) and adds new privileged users.  This means that you will probably
 have to specify different `--sudo-user` options depending on how far into the
 configuration you got.  For example, assuming the `pi` user still exists,
 
-    $ ansible-playbook --inventory-file hosts --limit clovermine --ask-sudo-pass --sudo --sudo-user pi site.yml
+    $ ansible-playbook --inventory-file hosts --limit clovermine --ask-sudo-pass --user pi --sudo site.yml
 
 You will be asked for the sudo password, which is the same as `pi`'s password
 (which defaults to `raspberry`).  Once the users are set up and `pi` is no
