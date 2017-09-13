@@ -23,7 +23,7 @@
     dest=/etc/hosts
     line="{{ item.ip }}{{'\t'}}{{ item.name }}.local{{'\t'}}{{ item.name }}"
     state=present
-  with_items: etc_hosts_contents
+  with_items: "{{etc_hosts_contents}}"
 
 ### Set timezone
 - name: set /etc/timezone to America/Los_Angeles
@@ -61,6 +61,8 @@
     update_cache=yes
   with_items:
     - vim
+    - git
+    - python-pip
 
 ### Create user accounts
 - name: create users
@@ -70,14 +72,14 @@
         groups="{{ item.groups }}"
         uid="{{ item.uid }}"
         state=present
-  with_items: create_users
+  with_items: "{{ create_users }}"
   tags: [ 'users' ]
 
 - name: install ssh pubkeys for new users
   authorized_key: user="{{ item.name }}"
                   key="{{ item.pubkey }}"
                   state=present
-  with_items: create_users
+  with_items: "{{ create_users }}"
   tags: [ 'users' ]
 
 ### TODO: disable the 'pi' user somehow
