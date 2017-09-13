@@ -13,13 +13,16 @@ used by anyone but me.
 If you want to use these playbooks to make a Raspberry Pi self-configure,
 install Ansible by doing the following:
 
-    # pip install --user ansible
-    # ssh-keygen
-    # ssh-copy-id localhost
+    $ pip install --user ansible
+    $ ssh-keygen
+    $ ssh-copy-id localhost
 
-Note that `apt-get install ansible` is not a great idea because it's almost
-certainly out of date, and the documentation online will talk about mainline
-features that don't exist in the distro-provided version.
+If not bootstrapping from the Raspberry Pi itself, you can instead do
+
+    $ ssh-copy-id pi@raspberrypi
+
+and authenticate using the default `raspberry` password.  This will enable
+key-based authentication to the remote Raspberry Pi to be configured.
 
 You can ensure that Ansible is able to configure using the following:
 
@@ -31,15 +34,19 @@ You can also ensure that authentication also works.
 
 ## Running the Playbook
 
-Authentication will be an issue since the configuration disables the default
-user (`pi`) and adds new privileged users.  This means that you will probably
-have to specify different `--sudo-user` options depending on how far into the
-configuration you got.  For example, assuming the `pi` user still exists,
+This playbook will deactivate password authentication for the `pi` user since
+it assumes that you have key-based authentication configured _before_ the
+playbook is executed.  Be sure that is the case or you may be locked out of
+your Raspberry Pi altogether.
 
-    $ ansible-playbook --inventory-file hosts --limit clovermine --ask-sudo-pass --user pi --sudo site.yml
+Then run the playbook:
 
-You will be asked for the sudo password, which is the same as `pi`'s password
-(which defaults to `raspberry`).  Once the users are set up and `pi` is no
-longer a valid user.
+    $ ansible-playbook --inventory-file hosts --limit cloverfield --user pi --sudo site.yml
 
-    $ ansible-playbook -i hosts -l clovermine -K -s -U glock site.yml
+or
+
+    $ ansible-playbook -i hosts -l clovermine -u pi -s site.yml
+
+Raspbian should allow the `pi` user to sudo without a password.  If not, run
+using `--ask-become-pass` (or `-K`) and enter the sudo password (default would
+be `raspberry`) for the remote user (`pi`).
