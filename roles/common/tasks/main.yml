@@ -1,4 +1,16 @@
 ---
+### Switch to non-default user as soon as possible if possible
+#- name: does primary login user exist?
+#  local_action: "command ssh -q -o ConnectTimeout=3 -l {{ create_users[0].name }} {{ inventory_hostname }} /bin/true"
+#  register: user_exists
+#  ignore_errors: true
+#  changed_when: false
+#
+#- name: switch remote_user if possible
+#  remote_user: "{{ user_exists | success | ternary(omit, create_users[0].name) }}"
+#  command: "/bin/true"
+#  changed_when: false
+
 ### Set hostname
 - name: set hostname
   hostname: name={{ inventory_hostname }}
@@ -82,4 +94,9 @@
   with_items: "{{ create_users }}"
   tags: [ 'users' ]
 
-### TODO: disable the 'pi' user somehow
+### disable the 'pi' user's ability to login in with password
+- name: disable 'pi' user
+  user: name="pi"
+        password="*"
+        state=present
+  tags: [ 'users' ]
