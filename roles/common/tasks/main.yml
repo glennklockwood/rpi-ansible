@@ -84,6 +84,7 @@
         groups="{{ item.groups }}"
         uid="{{ item.uid }}"
         state=present
+        shell=/bin/bash
   with_items: "{{ create_users }}"
   tags: [ 'users' ]
 
@@ -95,8 +96,11 @@
   tags: [ 'users' ]
 
 ### disable the 'pi' user's ability to login in with password
-- name: disable 'pi' user
-  user: name="pi"
-        password="*"
-        state=present
-  tags: [ 'users' ]
+### if you enable this, you may lock yourself out--you must make sure another
+### user has been added with both sudo privileges and a password by which
+### sudo can be authenticated
+#- name: disable 'pi' user
+#  user: name="pi"
+#        password="*"
+#        state=present
+#  tags: [ 'users' ]
