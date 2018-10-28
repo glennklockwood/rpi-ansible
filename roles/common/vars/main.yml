@@ -3,6 +3,8 @@ macaddrs:
     b8:27:eb:39:d7:57:
         hostname: "clovermine"
         ip: "192.168.1.154"
+    b8:27:eb:ff:35:c7:
+        hostname: "cloverleaf"
 
 ### Users that must be present on the system
 create_users:
