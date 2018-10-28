@@ -1,0 +1,8 @@
+---
+
+- name: enable uart on boot
+  lineinfile:
+    dest=/boot/config.txt
+    regexp="^enable_uart="
+    line="enable_uart=1"
+    state=present

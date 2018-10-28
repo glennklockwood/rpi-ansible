@@ -41,3 +41,4 @@
 # Other tasks
 - include: software.yml
 - include: users.yml
+- include: hardware.yml
