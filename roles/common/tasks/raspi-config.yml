@@ -27,7 +27,13 @@
 
 - name: set bootwait option
   command: "raspi-config nonint do_boot_wait {{ 1 if not macaddrs[my_macaddr].enable_bootwait else 0 }}"
-  when: macaddrs[my_macaddr].enable_bootwait != raspi_bootwait_enabled
+  when: "'enable_bootwait' in macaddrs[my_macaddr] and macaddrs[my_macaddr].enable_bootwait != raspi_bootwait_enabled"
+  tags:
+    - raspi
+
+- name: set boot splash option
+  command: "raspi-config nonint do_boot_splash {{ 1 if not macaddrs[my_macaddr].enable_bootsplash else 0 }}"
+  when: "'enable_bootsplash' in macaddrs[my_macaddr] and macaddrs[my_macaddr].enable_bootsplash != raspi_bootsplash_enabled"
   tags:
     - raspi
 

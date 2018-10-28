@@ -39,6 +39,14 @@
   tags:
     - raspi
 
+- name: get splash screen setting 
+  shell: "raspi-config nonint get_boot_splash" # 0 == "wait"; 1 == "don't wait"
+  register: raspi_boot_splash
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
 - name: get wifi country
   shell: "raspi-config nonint get_wifi_country"
   register: raspi_wifi_country
@@ -183,6 +191,7 @@
     raspi_gui_enabled: "{{ raspi_boot_gui.stdout != '0' }}"
     raspi_autologin_enabled: "{{ raspi_noautologin.stdout == '0' }}"
     raspi_bootwait_enabled: "{{ raspi_boot_nowait.stdout == '0' }}"
+    raspi_bootsplash_enabled: "{{ raspi_boot_splash.stdout == '0' }}"
     raspi_camera_enabled: "{{ raspi_camera_disabled.stdout == '0' }}"
     raspi_ssh_enabled: "{{ raspi_ssh_disabled.stdout == '0' }}"
     raspi_vnc_enabled: "{{ raspi_vnc_disabled.stdout == '0' }}"
