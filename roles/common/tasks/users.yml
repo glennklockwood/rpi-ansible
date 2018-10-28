@@ -1,0 +1,41 @@
+---
+### Switch to non-default user as soon as possible if possible
+#- name: does primary login user exist?
+#  local_action: "command ssh -q -o ConnectTimeout=3 -l {{ create_users[0].name }} {{ inventory_hostname }} /bin/true"
+#  register: user_exists
+#  ignore_errors: true
+#  changed_when: false
+#
+#- name: switch remote_user if possible
+#  remote_user: "{{ user_exists | success | ternary(omit, create_users[0].name) }}"
+#  command: "/bin/true"
+#  changed_when: false
+
+### Create user accounts
+- name: create users
+  user: name="{{ item.name }}"
+        comment="{{ item.comment }}"
+        group="{{ item.group }}"
+        groups="{{ item.groups }}"
+        uid="{{ item.uid }}"
+        state=present
+        shell=/bin/bash
+  with_items: "{{ create_users }}"
+  tags: [ 'users' ]
+
+- name: install ssh pubkeys for new users
+  authorized_key: user="{{ item.name }}"
+                  key="{{ item.pubkey }}"
+                  state=present
+  with_items: "{{ create_users }}"
+  tags: [ 'users' ]
+
+### disable the 'pi' user's ability to login in with password
+### if you enable this, you may lock yourself out--you must make sure another
+### user has been added with both sudo privileges and a password by which
+### sudo can be authenticated
+#- name: disable 'pi' user
+#  user: name="pi"
+#        password="*"
+#        state=present
+#  tags: [ 'users' ]

@@ -1,27 +1,25 @@
 ---
-### Switch to non-default user as soon as possible if possible
-#- name: does primary login user exist?
-#  local_action: "command ssh -q -o ConnectTimeout=3 -l {{ create_users[0].name }} {{ inventory_hostname }} /bin/true"
-#  register: user_exists
-#  ignore_errors: true
-#  changed_when: false
-#
-#- name: switch remote_user if possible
-#  remote_user: "{{ user_exists | success | ternary(omit, create_users[0].name) }}"
-#  command: "/bin/true"
-#  changed_when: false
 
-### Set hostname
+# Basic hostname setup
+
+- name: Get MAC address
+  debug: msg="{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+
+- name: store MAC address
+  set_fact:
+    my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+
 - name: set hostname
-  hostname: name={{ inventory_hostname }}
-  when: inventory_hostname is defined and ansible_nodename is defined
+  hostname: name={{ macaddrs[my_macaddr].hostname }}
+  when: my_macaddr in macaddrs
 
 - name: update /etc/hosts with new hostname
   lineinfile:
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}"
-    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ inventory_hostname }}.local{{'\t'}}{{ inventory_hostname }}"
+    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ macaddrs[my_macaddr].hostname }}.local{{'\t'}}{{ macaddrs[my_macaddr].hostname }}"
     state=present
+  when: my_macaddr in macaddrs
 
 - name: get rid of default 127.0.1.1 binding
   lineinfile:
@@ -29,16 +27,8 @@
     regexp="^127.0.1.1"
     state=absent
 
-### Configure /etc/hosts
-- name: ensure that all local hosts are in /etc/hosts
-  lineinfile:
-    dest=/etc/hosts
-    line="{{ item.ip }}{{'\t'}}{{ item.name }}.local{{'\t'}}{{ item.name }}"
-    state=present
-  with_items: "{{etc_hosts_contents}}"
-
-### Set timezone
-- name: set /etc/timezone to America/Los_Angeles
+# Set timezone
+- name: set /etc/timezone
   copy: src=etc/timezone
         dest=/etc/timezone
         owner=root
@@ -48,59 +38,6 @@
   notify:
       - changed timezone
 
-### Uninstall Raspbian bloat
-- name: remove raspbian bloat
-  apt:
-    name="{{ item }}"
-    state=absent
-  with_items:
-    - wolfram-engine
-    - libreoffice*
-    - scratch
-    - minecraft-pi
-    - python-minecraftpi 
-    - python3-minecraftpi
-    - sonic-pi
-    - dillo
-    - gpiciew
-    - penguinspuzzle
-
-### Install required software
-- name: install basic software environment
-  apt:
-    name="{{ item }}"
-    state=present
-    update_cache=yes
-  with_items:
-    - vim
-    - git
-    - python-pip
-
-### Create user accounts
-- name: create users
-  user: name="{{ item.name }}"
-        comment="{{ item.comment }}"
-        group="{{ item.group }}"
-        groups="{{ item.groups }}"
-        uid="{{ item.uid }}"
-        state=present
-        shell=/bin/bash
-  with_items: "{{ create_users }}"
-  tags: [ 'users' ]
-
-- name: install ssh pubkeys for new users
-  authorized_key: user="{{ item.name }}"
-                  key="{{ item.pubkey }}"
-                  state=present
-  with_items: "{{ create_users }}"
-  tags: [ 'users' ]
-
-### disable the 'pi' user's ability to login in with password
-### if you enable this, you may lock yourself out--you must make sure another
-### user has been added with both sudo privileges and a password by which
-### sudo can be authenticated
-#- name: disable 'pi' user
-#  user: name="pi"
-#        password="*"
-#        state=present
-#  tags: [ 'users' ]
+# Other tasks
+- include: software.yml
+- include: users.yml
