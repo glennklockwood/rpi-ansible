@@ -1,52 +1,46 @@
 # Raspberry Pi Ansible
 
-Glenn K. Lockwood, August 2017
+Glenn K. Lockwood, October 2018
 
 ## Introduction
 
 This is an Ansible configuration that configures a fresh Raspbian installation
-on Raspberry Pi.  This is very much a work in progress and not intended to be
-used by anyone but me.
+on Raspberry Pi.  It is intended to be run in local (pull) mode, where ansible
+is running on the same Raspberry Pi to be configured.
 
 ## Bootstrapping on Raspbian
 
-If you want to use these playbooks to make a Raspberry Pi self-configure,
-install Ansible by doing the following:
+You will need ansible installed on the Raspberry Pi being configured.
 
-    $ pip install --user ansible
-    $ ssh-keygen
-    $ ssh-copy-id localhost
+    $ sudo apt-get install ansible
 
-If not bootstrapping from the Raspberry Pi itself, you can instead do
+## Configuration
 
-    $ ssh-copy-id pi@raspberrypi
+The `macaddrs` structure in _roles/common/vars/main.yml_ maps the MAC address of
+a Raspberry Pi to its intended configuration state.  Add your Raspberry Pi's MAC
+address to that structure and set its configuration accordingly.
 
-and authenticate using the default `raspberry` password.  This will enable
-key-based authentication to the remote Raspberry Pi to be configured.
-
-You can ensure that Ansible is able to configure using the following:
-
-    $ ansible -i hosts all -m ping
-
-You can also ensure that authentication also works.
-
-    $ ansible -i hosts -u pi --sudo-user root all -a "/usr/bin/id -u"
-
-## Running the Playbook
-
-This playbook will deactivate password authentication for the `pi` user since
-it assumes that you have key-based authentication configured _before_ the
-playbook is executed.  Be sure that is the case or you may be locked out of
-your Raspberry Pi altogether.
+## Running the playbook
 
 Then run the playbook:
 
-    $ ansible-playbook --inventory-file hosts --limit cloverfield --user pi --sudo site.yml
+    $ sudo ansible-playbook local.yml 
 
-or
+The playbook will self-discover its settings, then idempotently configure the
+Raspberry Pi.
 
-    $ ansible-playbook -i hosts -l clovermine -u pi -s site.yml
+## After running the playbook
 
-Raspbian should allow the `pi` user to sudo without a password.  If not, run
-using `--ask-become-pass` (or `-K`) and enter the sudo password (default would
-be `raspberry`) for the remote user (`pi`).
+This playbook purposely requires a few manual steps _after_ running the playbook
+to ensure that it does not lock you out of your Raspberry Pi.
+
+1. While logged in as pi, `sudo passwd glock` (or whatever username you created)
+   to set a password for that user.  This is _not_ required to log in as that
+   user, but it _is_ required to `sudo` as that user.  You may also choose to
+   set a password for the pi and/or root users.
+
+2. `usermod --lock pi` to ensure that the default user is completely disabled.
+
+## Acknowledgment
+
+I stole a lot of knowledge from https://github.com/giuaig/ansible-raspi-config/.
