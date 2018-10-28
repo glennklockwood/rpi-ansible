@@ -111,25 +111,25 @@
 
 - name: set raspi-config facts
   set_fact:
-    raspi_type: raspi_type.stdout
-    raspi_hostname: raspi_hostname.stdout
-    raspi_boot_gui: raspi_boot_gui.stdout
-    raspi_noautologin: raspi_noautologin.stdout
-    raspi_boot_nowait: raspi_boot_nowait.stdout
-    raspi_wifi_country: raspi_wifi_country.stdout
-    raspi_camera_disabled: raspi_camera_disabled.stdout
-    raspi_ssh_disabled: raspi_ssh_disabled.stdout
-    raspi_vnc_disabled: raspi_vnc_disabled.stdout
-    raspi_spi_disabled: raspi_spi_disabled.stdout
-    raspi_i2c_disabled: raspi_i2c_disabled.stdout
-    raspi_serial_disabled: raspi_serial_disabled.stdout
-    raspi_serial_hw_disabled: raspi_serial_hw_disabled.stdout
-    raspi_onewire_disabled: raspi_onewire_disabled.stdout
-    raspi_rpgio_disabled: raspi_rpgio_disabled.stdout
-    raspi_overclock: raspi_overclock.stdout
-    raspi_fs_unexpandable: raspi_fs_unexpandable.stdout
-    raspi_overscan: raspi_overscan.stdout
-    raspi_gpu_mem: raspi_gpu_mem.stdout
-    raspi_gpu_mem_256: raspi_gpu_mem_256.stdout
-    raspi_gpu_mem_512: raspi_gpu_mem_512.stdout
-    raspi_gpu_mem_1024: raspi_gpu_mem_1024.stdout
+    raspi_type: "{{ raspi_type.stdout }}"
+    raspi_hostname: "{{ raspi_hostname.stdout }}"
+    raspi_boot_gui: "{{ raspi_boot_gui.stdout }}"
+    raspi_noautologin: "{{ raspi_noautologin.stdout }}"
+    raspi_boot_nowait: "{{ raspi_boot_nowait.stdout }}"
+    raspi_wifi_country: "{{ raspi_wifi_country.stdout }}"
+    raspi_camera_disabled: "{{ raspi_camera_disabled.stdout }}"
+    raspi_ssh_disabled: "{{ raspi_ssh_disabled.stdout }}"
+    raspi_vnc_disabled: "{{ raspi_vnc_disabled.stdout }}"
+    raspi_spi_disabled: "{{ raspi_spi_disabled.stdout }}"
+    raspi_i2c_disabled: "{{ raspi_i2c_disabled.stdout }}"
+    raspi_serial_disabled: "{{ raspi_serial_disabled.stdout }}"
+    raspi_serial_hw_disabled: "{{ raspi_serial_hw_disabled.stdout }}"
+    raspi_onewire_disabled: "{{ raspi_onewire_disabled.stdout }}"
+    raspi_rgpio_disabled: "{{ raspi_rgpio_disabled.stdout }}"
+    raspi_overclock: "{{ raspi_overclock.stdout }}"
+    raspi_fs_unexpandable: "{{ raspi_fs_unexpandable.stdout }}"
+    raspi_overscan: "{{ raspi_overscan.stdout }}"
+    raspi_gpu_mem: "{{ raspi_gpu_mem.stdout }}"
+    raspi_gpu_mem_256: "{{ raspi_gpu_mem_256.stdout }}"
+    raspi_gpu_mem_512: "{{ raspi_gpu_mem_512.stdout }}"
+    raspi_gpu_mem_1024: "{{ raspi_gpu_mem_1024.stdout }}"

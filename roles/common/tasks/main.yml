@@ -6,11 +6,16 @@
 
 # Basic hostname setup
 - name: Get MAC address
-  debug: msg="{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+  debug: 
+    msg: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
 
 - name: store MAC address
   set_fact:
     my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+
+- name: print configured hostname
+  debug: 
+    msg: "raspi-config hostname: {{ raspi_hostname }} vs. intended: {{ macaddrs[my_macaddr].hostname }}"
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ macaddrs[my_macaddr].hostname }}"
@@ -38,7 +43,7 @@
 # Set locale
 - name: set locale
   shell: "raspi-config nonint do_change_locale {{ macaddrs[my_macaddr].locale }}"
-  when: raspi_locale != macaddrs[my_macaddr].locale
+  when: linux_locale != macaddrs[my_macaddr].locale
 
 # Enable sshd
 - name: forbid login via 'pi' user via ssh
