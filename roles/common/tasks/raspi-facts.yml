@@ -79,6 +79,15 @@
   tags:
     - raspi
 
+- name: get VNC installed status
+  command: systemctl status vncserver-x11-serviced
+  register: systemctl_vnc_status
+  failed_when: "not systemctl_vnc_status.stdout and 'failed' not in systemctl_vnc_status.stderr and 'found' not in systemctl_vnc_status.stderr"
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
 - name: get SPI enabled status
   shell: "raspi-config nonint get_spi"
   register: raspi_spi_disabled
@@ -194,7 +203,7 @@
     raspi_bootsplash_enabled: "{{ raspi_boot_splash.stdout == '0' }}"
     raspi_camera_enabled: "{{ raspi_camera_disabled.stdout == '0' }}"
     raspi_ssh_enabled: "{{ raspi_ssh_disabled.stdout == '0' }}"
-    raspi_vnc_enabled: "{{ raspi_vnc_disabled.stdout == '0' }}"
+    raspi_vnc_enabled: "{{ raspi_vnc_disabled.stdout == '0' or (systemctl_vnc_status|failed and ('find' in systemctl_vnc_status.stderr or 'found' in systemctl_vnc_status.stderr)) }}"
     raspi_spi_enabled: "{{ raspi_spi_disabled.stdout == '0' }}"
     raspi_i2c_enabled: "{{ raspi_i2c_disabled.stdout == '0' }}"
     raspi_serial_enabled: "{{ raspi_serial_disabled.stdout == '0' }}"
