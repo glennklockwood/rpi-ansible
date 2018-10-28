@@ -11,8 +11,15 @@
   changed_when: False
   check_mode: no
 
+- name: get x keyboard layout
+  shell: "localectl | awk '/X11 Layout/ {print $3}'"
+  register: linux_xkblayout
+  changed_when: False
+  check_mode: no
+
 - name: set linux-config facts
   set_fact:
     linux_tz: "{{ linux_tz.stdout }}"
     linux_locale: "{{ linux_locale.stdout }}"
+    linux_xkblayout: "{{ linux_xkblayout }}"
   check_mode: no

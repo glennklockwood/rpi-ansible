@@ -17,17 +17,22 @@
   tags:
     - raspi
 
+- name: store system configuration
+  set_fact:
+    myconfig: "{{ macaddrs[my_macaddr] }}"
+  tags:
+    - raspi
+
 - name: set hostname
-  shell: "raspi-config nonint do_hostname {{ macaddrs[my_macaddr].hostname }}"
-  when: raspi_hostname != macaddrs[my_macaddr].hostname
+  shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"
+  when: raspi_hostname != myconfig.hostname
 
 - name: update /etc/hosts with new hostname
   lineinfile:
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}"
-    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ macaddrs[my_macaddr].hostname }}.{{ macaddrs[my_macaddr].domain }}{{'\t'}}{{ macaddrs[my_macaddr].hostname }}"
+    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ myconfig.hostname }}.{{ myconfig.domain }}{{'\t'}}{{ myconfig.hostname }}"
     state=present
-  when: my_macaddr in macaddrs
 
 - name: get rid of default 127.0.1.1 binding
   lineinfile:
@@ -37,13 +42,23 @@
 
 # Set timezone
 - name: set timezone
-  shell: "timedatectl set-timezone {{ macaddrs[my_macaddr].timezone }}"
-  when: linux_tz != macaddrs[my_macaddr].timezone
+  command: "timedatectl set-timezone {{ myconfig.timezone }}"
+  when: linux_tz != myconfig.timezone
 
 # Set locale
 - name: set locale
-  shell: "raspi-config nonint do_change_locale {{ macaddrs[my_macaddr].locale }}"
-  when: linux_locale != macaddrs[my_macaddr].locale
+  command: "raspi-config nonint do_change_locale {{ myconfig.locale }}"
+  when: "'locale' in myconfig and linux_locale != myconfig.locale"
+
+# Set X keyboard layout
+- name: set X11 keyboard layout
+  command: "raspi-config nonint do_configure_keyboard {{ myconfig.xkblayout }}"
+  when: "'xkblayout' in myconfig and myconfig.xkblayout != linux_xkblayout"
+
+# Set wifi country
+- name: set wifi country
+  command: "raspiconfig nonint do_wifi_country {{ myconfig.wifi_country }}"
+  when: "'wifi_country' in myconfig and myconfig.wifi_country != raspi_wifi_country"
 
 # Enable sshd
 - name: disable ssh login for user pi
