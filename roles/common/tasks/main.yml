@@ -8,14 +8,14 @@
 - name: Get MAC address
   debug: 
     msg: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+  tags:
+    - raspi
 
 - name: store MAC address
   set_fact:
     my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
-
-- name: print configured hostname
-  debug: 
-    msg: "raspi-config hostname: {{ raspi_hostname }} vs. intended: {{ macaddrs[my_macaddr].hostname }}"
+  tags:
+    - raspi
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ macaddrs[my_macaddr].hostname }}"
@@ -46,17 +46,21 @@
   when: linux_locale != macaddrs[my_macaddr].locale
 
 # Enable sshd
-- name: forbid login via 'pi' user via ssh
+- name: disable ssh login for user pi
   lineinfile:
     dest=/etc/ssh/sshd_config
     line="DenyUsers pi"
     state=present
+  tags:
+    - raspi
 
-- name: enable SSH
+- name: enable SSH via raspi-config
   shell: "raspi-config nonint do_ssh 0"
-  when: raspi_ssh_disabled != '0'
+  when: not raspi_ssh_enabled
+  tags:
+    - raspi
 
 # Other tasks
 - include: software.yml
 - include: users.yml
-- include: hardware.yml
+- include: raspi-config.yml

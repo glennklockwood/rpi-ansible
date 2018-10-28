@@ -3,14 +3,16 @@
   shell: "timedatectl | grep 'Time zone' | cut -d':' -f2 | cut -d'(' -f1 | sed -Ee 's/(^ *| *$)//g'"
   register: linux_tz
   changed_when: False
+  check_mode: no
 
 - name: get locale
   shell: "locale | grep ^LANG | cut -d= -f2"
   register: linux_locale
   changed_when: False
-
+  check_mode: no
 
 - name: set linux-config facts
   set_fact:
     linux_tz: "{{ linux_tz.stdout }}"
     linux_locale: "{{ linux_locale.stdout }}"
+  check_mode: no

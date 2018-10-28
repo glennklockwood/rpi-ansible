@@ -17,6 +17,8 @@
       - dillo
       - gpiciew
       - penguinspuzzle
+  tags:
+    - sw
 
 ### Install required software
 - name: install basic software environment
@@ -29,3 +31,5 @@
       - vim
       - git
       - python-pip
+  tags:
+    - sw

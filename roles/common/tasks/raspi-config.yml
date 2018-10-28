@@ -4,19 +4,35 @@
 - name: enable cli only
   command: "raspi-config nonint do_boot_behaviour B1"
   when: not macaddrs[my_macaddr].enable_gui and not macaddrs[my_macaddr].enable_autologin and (raspi_gui_enabled or raspi_autologin_enabled)
+  tags:
+    - raspi
 
 - name: enable cli with autologin
   command: "raspi-config nonint do_boot_behaviour B2"
   when: not macaddrs[my_macaddr].enable_gui and macaddrs[my_macaddr].enable_autologin and (raspi_gui_enabled or not raspi_autologin_enabled)
+  tags:
+    - raspi
 
 - name: enable desktop gui
   command: "raspi-config nonint do_boot_behaviour B3"
   when: macaddrs[my_macaddr].enable_gui and not macaddrs[my_macaddr].enable_autologin and (not raspi_gui_enabled or raspi_autologin_enabled)
+  tags:
+    - raspi
 
 - name: enable desktop gui with autologin
   command: "raspi-config nonint do_boot_behaviour B4"
   when: macaddrs[my_macaddr].enable_gui and macaddrs[my_macaddr].enable_autologin and (not raspi_gui_enabled or raspi_autologin_enabled)
+  tags:
+    - raspi
 
-#- name: set bootwait option
-#  command: "raspi-config nonint do_boot_wait {{ not macaddrs[my_macaddr].raspi_bootwait }}"
-#when: macaddrs[my_macaddr].raspi_boot_nowait
+- name: set bootwait option
+  command: "raspi-config nonint do_boot_wait {{ 1 if not macaddrs[my_macaddr].enable_bootwait else 0 }}"
+  when: macaddrs[my_macaddr].enable_bootwait != raspi_bootwait_enabled
+  tags:
+    - raspi
+
+- name: expand file system
+  command: "raspi-config nonint do_expand_rootfs"
+  when: raspi_fs_expandable
+  tags:
+    - raspi
