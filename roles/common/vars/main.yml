@@ -5,6 +5,18 @@ macaddrs:
         domain: "local"
         locale: "en_US.UTF-8"
         timezone: "America/Los_Angeles"
+        enable_gui: True
+        enable_autologin: False
+        enable_bootwait: True
+        enable_camera: False
+        enable_vnc: False
+        enable_spi: False
+        enable_i2c: False
+        enable_serial: True
+        enable_serial_hw: True
+        enable_onewire: False
+        enable_rgpio: False
+        expand_fs: True
     b8:27:eb:ff:35:c7:
         hostname: "cloverleaf"
         domain: "local"
