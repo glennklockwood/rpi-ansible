@@ -1,7 +1,10 @@
 ---
 
-# Basic hostname setup
+# Gather facts specific to the Raspberry Pi platform
+- include: raspi-facts.yml
+- include: linux-facts.yml
 
+# Basic hostname setup
 - name: Get MAC address
   debug: msg="{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
 
@@ -10,14 +13,14 @@
     my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
 
 - name: set hostname
-  hostname: name={{ macaddrs[my_macaddr].hostname }}
-  when: my_macaddr in macaddrs
+  shell: "raspi-config nonint do_hostname {{ macaddrs[my_macaddr].hostname }}"
+  when: raspi_hostname != macaddrs[my_macaddr].hostname
 
 - name: update /etc/hosts with new hostname
   lineinfile:
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}"
-    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ macaddrs[my_macaddr].hostname }}.local{{'\t'}}{{ macaddrs[my_macaddr].hostname }}"
+    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ macaddrs[my_macaddr].hostname }}.{{ macaddrs[my_macaddr].domain }}{{'\t'}}{{ macaddrs[my_macaddr].hostname }}"
     state=present
   when: my_macaddr in macaddrs
 
@@ -28,15 +31,25 @@
     state=absent
 
 # Set timezone
-- name: set /etc/timezone
-  copy: src=etc/timezone
-        dest=/etc/timezone
-        owner=root
-        group=root
-        mode=0644
-        backup=yes
-  notify:
-      - changed timezone
+- name: set timezone
+  shell: "timedatectl set-timezone {{ macaddrs[my_macaddr].timezone }}"
+  when: linux_tz != macaddrs[my_macaddr].timezone
+
+# Set locale
+- name: set locale
+  shell: "raspi-config nonint do_change_locale {{ macaddrs[my_macaddr].locale }}"
+  when: raspi_locale != macaddrs[my_macaddr].locale
+
+# Enable sshd
+- name: forbid login via 'pi' user via ssh
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    line="DenyUsers pi"
+    state=present
+
+- name: enable SSH
+  shell: "raspi-config nonint do_ssh 0"
+  when: raspi_ssh_disabled != '0'
 
 # Other tasks
 - include: software.yml

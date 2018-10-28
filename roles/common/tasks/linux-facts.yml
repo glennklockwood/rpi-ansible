@@ -1,0 +1,9 @@
+---
+- name: get timezone via timedatectl
+  shell: timedatectl | grep "Time zone" | cut -d: -f2 | cut -d'(' -f1 | sed -Ee 's/(^ *| *$)//g'
+  register: linux_tz
+  changed_when: False
+
+- name: set linux-config facts
+  set_fact:
+    linux_tz: linux_tz.stdout
