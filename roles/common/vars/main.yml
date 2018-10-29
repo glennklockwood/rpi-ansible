@@ -38,7 +38,9 @@ macaddrs:
         enable_onewire: False
         enable_rgpio: False
         extra_software:
-          - w3m
+          - "w3m"
+          - "irssi"
+          - "screen"
 
 ### Users that must be present on the system
 create_users:

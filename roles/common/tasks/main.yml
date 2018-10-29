@@ -10,18 +10,21 @@
     msg: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
   tags:
     - raspi
+    - sw
 
 - name: store MAC address
   set_fact:
     my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
   tags:
     - raspi
+    - sw
 
 - name: store system configuration
   set_fact:
     myconfig: "{{ macaddrs[my_macaddr] }}"
   tags:
     - raspi
+    - sw
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"
