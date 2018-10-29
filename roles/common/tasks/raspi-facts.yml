@@ -1,0 +1,221 @@
+---
+- name: get Raspberry Pi model type
+  shell: "raspi-config nonint get_pi_type"
+  register: raspi_type
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get hostname via raspi-config
+  shell: "raspi-config nonint get_hostname"
+  register: raspi_hostname
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get boot-to-gui setting 
+  shell: "raspi-config nonint get_boot_cli" # 0 == "boot to cli"; 1 == "boot to gui"
+  register: raspi_boot_gui
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get autologin setting
+  shell: "raspi-config nonint get_autologin" # 0 == "enable autologin"; 1 == "disable autologin"
+  register: raspi_noautologin
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get wait-for-network-on-boot setting 
+  shell: "raspi-config nonint get_boot_wait" # 0 == "wait"; 1 == "don't wait"
+  register: raspi_boot_nowait
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get splash screen setting 
+  shell: "raspi-config nonint get_boot_splash" # 0 == "wait"; 1 == "don't wait"
+  register: raspi_boot_splash
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get wifi country
+  shell: "raspi-config nonint get_wifi_country"
+  register: raspi_wifi_country
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get camera status
+  shell: "raspi-config nonint get_camera" # 0 == "camera enabled"; 1 == "camera disabled"
+  register: raspi_camera_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get ssh enabled status
+  shell: "raspi-config nonint get_ssh"
+  register: raspi_ssh_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get VNC enabled status
+  shell: "raspi-config nonint get_vnc"
+  register: raspi_vnc_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get SPI enabled status
+  shell: "raspi-config nonint get_spi"
+  register: raspi_spi_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get I2C enabled status
+  shell: "raspi-config nonint get_i2c"
+  register: raspi_i2c_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get serial enabled status
+  shell: "raspi-config nonint get_serial"
+  register: raspi_serial_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get hardware serial enabled status
+  shell: "raspi-config nonint get_serial_hw"
+  register: raspi_serial_hw_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get onewire enabled status
+  shell: "raspi-config nonint get_onewire"
+  register: raspi_onewire_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get remote gpio enabled status
+  shell: "raspi-config nonint get_rgpio"
+  register: raspi_rgpio_disabled
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get overclock state 
+  shell: "raspi-config nonint get_config_var arm_freq /boot/config.txt"
+  register: raspi_overclock
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get fs expandability
+  shell: "raspi-config nonint get_can_expand"
+  register: raspi_fs_unexpandable
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get overscan setting
+  shell: "raspi-config nonint get_overscan"
+  register: raspi_overscan
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get GPU memory split
+  shell: "raspi-config nonint get_config_var gpu_mem /boot/config.txt"
+  register: raspi_gpu_mem
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get GPU memory split 256
+  shell: "raspi-config nonint get_config_var gpu_mem_256 /boot/config.txt"
+  register: raspi_gpu_mem_256
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get GPU memory split 512
+  shell: "raspi-config nonint get_config_var gpu_mem_512 /boot/config.txt"
+  register: raspi_gpu_mem_512
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: get GPU memory split 1024
+  shell: "raspi-config nonint get_config_var gpu_mem_1024 /boot/config.txt"
+  register: raspi_gpu_mem_1024
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: determine last allocated disk sector
+  shell: "parted /dev/mmcblk0 -ms unit s p | tail -n1 | awk -F':' '{ print $3 + 0 }'"
+  register: raspi_last_alloced_sector
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
+- name: set raspi-config facts
+  set_fact:
+    raspi_type: "{{ raspi_type.stdout }}"
+    raspi_hostname: "{{ raspi_hostname.stdout }}"
+    raspi_wifi_country: "{{ raspi_wifi_country.stdout }}"
+    raspi_gui_enabled: "{{ raspi_boot_gui.stdout != '0' }}"
+    raspi_autologin_enabled: "{{ raspi_noautologin.stdout == '0' }}"
+    raspi_bootwait_enabled: "{{ raspi_boot_nowait.stdout == '0' }}"
+    raspi_bootsplash_enabled: "{{ raspi_boot_splash.stdout == '0' }}"
+    raspi_camera_enabled: "{{ raspi_camera_disabled.stdout == '0' }}"
+    raspi_ssh_enabled: "{{ raspi_ssh_disabled.stdout == '0' }}"
+    raspi_vnc_enabled: "{{ raspi_vnc_disabled.stdout == '0' and 'find' not in raspi_vnc_disabled.stderr and 'found' not in raspi_vnc_disabled.stderr }}"
+    raspi_spi_enabled: "{{ raspi_spi_disabled.stdout == '0' }}"
+    raspi_i2c_enabled: "{{ raspi_i2c_disabled.stdout == '0' }}"
+    raspi_serial_enabled: "{{ raspi_serial_disabled.stdout == '0' }}"
+    raspi_serial_hw_enabled: "{{ raspi_serial_hw_disabled.stdout == '0' }}"
+    raspi_onewire_enabled: "{{ raspi_onewire_disabled.stdout == '0' }}"
+    raspi_rgpio_enabled: "{{ raspi_rgpio_disabled.stdout == '0' }}"
+    raspi_overclock: "{{ raspi_overclock.stdout }}"
+    raspi_fs_expandable: "{{ raspi_fs_unexpandable.stdout == '0' and (raspi_last_alloced_sector.stdout|int + 1) < ansible_devices.mmcblk0.sectors|int }}"
+    raspi_overscan: "{{ raspi_overscan.stdout }}"
+    raspi_gpu_mem: "{{ raspi_gpu_mem.stdout }}"
+    raspi_gpu_mem_256: "{{ raspi_gpu_mem_256.stdout }}"
+    raspi_gpu_mem_512: "{{ raspi_gpu_mem_512.stdout }}"
+    raspi_gpu_mem_1024: "{{ raspi_gpu_mem_1024.stdout }}"
+  check_mode: no
+  tags:
+    - raspi

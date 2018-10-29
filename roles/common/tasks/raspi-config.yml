@@ -1,0 +1,98 @@
+---
+
+# Handle boot and autologin settings
+- name: enable cli only
+  command: "raspi-config nonint do_boot_behaviour B1"
+  when: not myconfig.enable_gui and not myconfig.enable_autologin and (raspi_gui_enabled or raspi_autologin_enabled)
+  tags:
+    - raspi
+
+- name: enable cli with autologin
+  command: "raspi-config nonint do_boot_behaviour B2"
+  when: not myconfig.enable_gui and myconfig.enable_autologin and (raspi_gui_enabled or not raspi_autologin_enabled)
+  tags:
+    - raspi
+
+- name: enable desktop gui
+  command: "raspi-config nonint do_boot_behaviour B3"
+  when: myconfig.enable_gui and not myconfig.enable_autologin and (not raspi_gui_enabled or raspi_autologin_enabled)
+  tags:
+    - raspi
+
+- name: enable desktop gui with autologin
+  command: "raspi-config nonint do_boot_behaviour B4"
+  when: myconfig.enable_gui and myconfig.enable_autologin and (not raspi_gui_enabled or raspi_autologin_enabled)
+  tags:
+    - raspi
+
+- name: set bootwait option
+  command: "raspi-config nonint do_boot_wait {{ 0 if myconfig.enable_bootwait else 1 }}"
+  when: "'enable_bootwait' in myconfig and myconfig.enable_bootwait != raspi_bootwait_enabled"
+  tags:
+    - raspi
+
+- name: set boot splash option
+  command: "raspi-config nonint do_boot_splash {{ 0 if myconfig.enable_bootsplash else 1 }}"
+  when: "'enable_bootsplash' in myconfig and myconfig.enable_bootsplash != raspi_bootsplash_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable camera
+  command: "raspi-config nonint do_camera {{ 0 if myconfig.enable_camera else 1 }}"
+  when: "'enable_camera' in myconfig and myconfig.enable_camera != raspi_camera_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable VNC server
+  command: "raspi-config nonint do_vnc {{ 0 if myconfig.enable_vnc else 1 }}"
+  when: "'enable_vnc' in myconfig and myconfig.enable_vnc != raspi_vnc_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable SPI
+  command: "raspi-config nonint do_spi {{ 0 if myconfig.enable_spi else 1 }}"
+  when: "'enable_spi' in myconfig and myconfig.enable_spi != raspi_spi_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable I2C
+  command: "raspi-config nonint do_i2c {{ 0 if myconfig.enable_i2c else 1 }}"
+  when: "'enable_i2c' in myconfig and myconfig.enable_i2c != raspi_i2c_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable serial
+  command: "raspi-config nonint do_serial {{ 0 if myconfig.enable_serial else 1 }}"
+  when: "'enable_serial' in myconfig and myconfig.enable_serial != raspi_serial_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable hardware serial
+  command: "raspi-config nonint do_serial_hw {{ 0 if myconfig.enable_serial_hw else 1 }}"
+  when: "'enable_serial_hw' in myconfig and myconfig.enable_serial_hw != raspi_serial_hw_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable onewire
+  command: "raspi-config nonint do_onewire {{ 0 if myconfig.enable_onewire else 1 }}"
+  when: "'enable_onewire' in myconfig and myconfig.enable_onewire != raspi_onewire_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable remote GPIO
+  command: "raspi-config nonint do_rgpio {{ 0 if myconfig.enable_rgpio else 1 }}"
+  when: "'enable_rgpio' in myconfig and myconfig.enable_rgpio != raspi_rgpio_enabled"
+  tags:
+    - raspi
+
+- name: enable/disable HDMI overscan
+  command: "raspi-config nonint do_overscan {{ 0 if myconfig.enable_overscan else 1 }}"
+  when: "'enable_overscan' in myconfig and myconfig.enable_overscan != raspi_overscan_enabled"
+  tags:
+    - raspi
+
+- name: expand file system
+  command: "raspi-config nonint do_expand_rootfs"
+  when: raspi_fs_expandable
+  tags:
+    - raspi

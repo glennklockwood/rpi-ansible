@@ -1,26 +1,40 @@
 ---
-### Switch to non-default user as soon as possible if possible
-#- name: does primary login user exist?
-#  local_action: "command ssh -q -o ConnectTimeout=3 -l {{ create_users[0].name }} {{ inventory_hostname }} /bin/true"
-#  register: user_exists
-#  ignore_errors: true
-#  changed_when: false
-#
-#- name: switch remote_user if possible
-#  remote_user: "{{ user_exists | success | ternary(omit, create_users[0].name) }}"
-#  command: "/bin/true"
-#  changed_when: false
 
-### Set hostname
+# Gather facts specific to the Raspberry Pi platform
+- include: raspi-facts.yml
+- include: linux-facts.yml
+
+# Basic hostname setup
+- name: Get MAC address
+  debug: 
+    msg: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+  tags:
+    - raspi
+    - sw
+
+- name: store MAC address
+  set_fact:
+    my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+  tags:
+    - raspi
+    - sw
+
+- name: store system configuration
+  set_fact:
+    myconfig: "{{ macaddrs[my_macaddr] }}"
+  tags:
+    - raspi
+    - sw
+
 - name: set hostname
-  hostname: name={{ inventory_hostname }}
-  when: inventory_hostname is defined and ansible_nodename is defined
+  shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"
+  when: raspi_hostname != myconfig.hostname
 
 - name: update /etc/hosts with new hostname
   lineinfile:
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}"
-    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ inventory_hostname }}.local{{'\t'}}{{ inventory_hostname }}"
+    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ myconfig.hostname }}.{{ myconfig.domain }}{{'\t'}}{{ myconfig.hostname }}"
     state=present
 
 - name: get rid of default 127.0.1.1 binding
@@ -29,78 +43,65 @@
     regexp="^127.0.1.1"
     state=absent
 
-### Configure /etc/hosts
-- name: ensure that all local hosts are in /etc/hosts
+# Set timezone
+- name: set timezone
+  command: "timedatectl set-timezone {{ myconfig.timezone }}"
+  when: linux_tz != myconfig.timezone
+
+# Set locale
+- name: set locale
+  command: "raspi-config nonint do_change_locale {{ myconfig.locale }}"
+  when: "'locale' in myconfig and linux_locale != myconfig.locale"
+
+# Set X keyboard layout
+- name: set X11 keyboard layout
+  command: "raspi-config nonint do_configure_keyboard {{ myconfig.xkblayout }}"
+  when: "'xkblayout' in myconfig and myconfig.xkblayout != linux_xkblayout"
+
+# Set wifi country
+- name: set wifi country
+  command: "raspiconfig nonint do_wifi_country {{ myconfig.wifi_country }}"
+  when: "'wifi_country' in myconfig and myconfig.wifi_country != raspi_wifi_country"
+
+# Enable sshd
+- name: disable ssh login for user pi
   lineinfile:
-    dest=/etc/hosts
-    line="{{ item.ip }}{{'\t'}}{{ item.name }}.local{{'\t'}}{{ item.name }}"
+    dest=/etc/ssh/sshd_config
+    line="DenyUsers pi"
     state=present
-  with_items: "{{etc_hosts_contents}}"
+  tags:
+    - raspi
 
-### Set timezone
-- name: set /etc/timezone to America/Los_Angeles
-  copy: src=etc/timezone
-        dest=/etc/timezone
-        owner=root
-        group=root
-        mode=0644
-        backup=yes
-  notify:
-      - changed timezone
+- name: enable SSH via raspi-config
+  shell: "raspi-config nonint do_ssh 0"
+  when: not raspi_ssh_enabled
+  tags:
+    - raspi
 
-### Uninstall Raspbian bloat
-- name: remove raspbian bloat
-  apt:
-    name="{{ item }}"
-    state=absent
-  with_items:
-    - wolfram-engine
-    - libreoffice*
-    - scratch
-    - minecraft-pi
-    - python-minecraftpi 
-    - python3-minecraftpi
-    - sonic-pi
-    - dillo
-    - gpiciew
-    - penguinspuzzle
+# Other tasks
+- include: software.yml
+- include: users.yml
+- include: raspi-config.yml
 
-### Install required software
-- name: install basic software environment
-  apt:
-    name="{{ item }}"
-    state=present
-    update_cache=yes
-  with_items:
-    - vim
-    - git
-    - python-pip
+# Configure firewall
+- name: allow SSH through UFW
+  ufw:
+    rule: allow
+    port: ssh
+    proto: tcp
+    log: yes
 
-### Create user accounts
-- name: create users
-  user: name="{{ item.name }}"
-        comment="{{ item.comment }}"
-        group="{{ item.group }}"
-        groups="{{ item.groups }}"
-        uid="{{ item.uid }}"
-        state=present
-        shell=/bin/bash
-  with_items: "{{ create_users }}"
-  tags: [ 'users' ]
+- name: set default incoming UFW policy to deny
+  ufw:
+    direction: incoming
+    policy: deny
 
-- name: install ssh pubkeys for new users
-  authorized_key: user="{{ item.name }}"
-                  key="{{ item.pubkey }}"
-                  state=present
-  with_items: "{{ create_users }}"
-  tags: [ 'users' ]
+- name: set default outgoing UFW policy to deny
+  ufw:
+    direction: outgoing
+    policy: allow
 
-### disable the 'pi' user's ability to login in with password
-### if you enable this, you may lock yourself out--you must make sure another
-### user has been added with both sudo privileges and a password by which
-### sudo can be authenticated
-#- name: disable 'pi' user
-#  user: name="pi"
-#        password="*"
-#        state=present
-#  tags: [ 'users' ]
+- name: enable UFW
+  ufw:
+    state: enabled
+    logging: yes
