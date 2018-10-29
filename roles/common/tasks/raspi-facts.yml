@@ -183,6 +183,14 @@
   tags:
     - raspi
 
+- name: determine last allocated disk sector
+  shell: "parted /dev/mmcblk0 -ms unit s p | tail -n1 | awk -F':' '{ print $3 + 0 }'"
+  register: raspi_last_alloced_sector
+  changed_when: False
+  check_mode: no
+  tags:
+    - raspi
+
 - name: set raspi-config facts
   set_fact:
     raspi_type: "{{ raspi_type.stdout }}"
@@ -202,7 +210,7 @@
     raspi_onewire_enabled: "{{ raspi_onewire_disabled.stdout == '0' }}"
     raspi_rgpio_enabled: "{{ raspi_rgpio_disabled.stdout == '0' }}"
     raspi_overclock: "{{ raspi_overclock.stdout }}"
-    raspi_fs_expandable: "{{ raspi_fs_unexpandable.stdout == '0' }}"
+    raspi_fs_expandable: "{{ raspi_fs_unexpandable.stdout == '0' and (raspi_last_alloced_sector.stdout + 1) < ansible_devices.mmcblk0.sectors }}"
     raspi_overscan: "{{ raspi_overscan.stdout }}"
     raspi_gpu_mem: "{{ raspi_gpu_mem.stdout }}"
     raspi_gpu_mem_256: "{{ raspi_gpu_mem_256.stdout }}"
