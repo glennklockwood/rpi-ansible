@@ -79,3 +79,26 @@
 - include: software.yml
 - include: users.yml
 - include: raspi-config.yml
+
+# Configure firewall
+- name: allow SSH through UFW
+  ufw:
+    rule: allow
+    port: ssh
+    proto: tcp
+    log: yes
+
+- name: set default incoming UFW policy to deny
+  ufw:
+    direction: incoming
+    policy: deny
+
+- name: set default outgoing UFW policy to deny
+  ufw:
+    direction: outgoing
+    policy: allow
+
+- name: enable UFW
+  ufw:
+    state: enabled
+    logging: yes
