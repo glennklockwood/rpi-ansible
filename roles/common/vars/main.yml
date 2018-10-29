@@ -37,6 +37,8 @@ macaddrs:
         enable_serial_hw: True
         enable_onewire: False
         enable_rgpio: False
+        extra_software:
+          - w3m
 
 ### Users that must be present on the system
 create_users:

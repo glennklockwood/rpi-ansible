@@ -1,6 +1,6 @@
 ---
 
-### Uninstall Raspbian bloat
+# Uninstall Raspbian bloat
 - name: remove raspbian bloat
   apt:
     name="{{ packages }}"
@@ -20,7 +20,7 @@
   tags:
     - sw
 
-### Install required software
+# Install required software
 - name: install basic software environment
   apt:
     name="{{ packages }}"
@@ -32,5 +32,14 @@
       - git
       - python-pip
       - ufw
+  tags:
+    - sw
+
+- name: install additional software
+  apt:
+    name="{{ myconfig.extra_software }}"
+    state=present
+    update_cache=yes
+  when: "'extra_software' in myconfig"
   tags:
     - sw
