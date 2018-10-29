@@ -21,5 +21,5 @@
   set_fact:
     linux_tz: "{{ linux_tz.stdout }}"
     linux_locale: "{{ linux_locale.stdout }}"
-    linux_xkblayout: "{{ linux_xkblayout }}"
+    linux_xkblayout: "{{ linux_xkblayout.stdout }}"
   check_mode: no
