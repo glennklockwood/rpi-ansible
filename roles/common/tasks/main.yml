@@ -82,6 +82,8 @@
 - include: software.yml
 - include: users.yml
 - include: raspi-config.yml
+- include: darshan-dev.yml
+  when: "'darshan_dev' in myconfig and myconfig.darshan_dev"
 
 # Configure firewall
 - name: allow SSH through UFW

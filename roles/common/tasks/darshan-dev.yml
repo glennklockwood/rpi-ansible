@@ -1,0 +1,12 @@
+---
+- name: install prerequisite software for Darshan development
+  apt:
+    name="{{ item }}"
+    state=present
+    update_cache=yes
+  with_items:
+    - mpich
+    - zlib1g-dev
+    - autoconf
+  tags:
+    - sw
