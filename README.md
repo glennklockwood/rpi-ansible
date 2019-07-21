@@ -10,9 +10,11 @@ is running on the same Raspberry Pi to be configured.
 
 ## Bootstrapping on Raspbian
 
-You will need ansible installed on the Raspberry Pi being configured.
+You will need ansible installed on the Raspberry Pi being configured.  This
+playbook relies on Ansible 2.8 or newer, which means you can no longer use
+`sudo apt-get install ansible`.  Instead, you must
 
-    $ sudo apt-get install ansible
+    $ sudo pip install ansible
 
 ## Configuration
 
