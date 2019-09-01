@@ -15,7 +15,7 @@
       - python3-minecraftpi
       - sonic-pi
       - dillo
-      - gpiciew
+      - gpicview
       - penguinspuzzle
   tags:
     - sw
