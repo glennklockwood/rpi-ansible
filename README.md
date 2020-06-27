@@ -14,7 +14,14 @@ You will need ansible installed on the Raspberry Pi being configured.  This
 playbook relies on Ansible 2.8 or newer, which means you can no longer use
 `sudo apt-get install ansible`.  Instead, you must
 
-    $ sudo pip install ansible
+    $ python3 -m venv ansible_env
+    
+    $ source ./ansible_env/bin/activate
+    
+    (ansible) $ which pip
+    /home/pi/src/git/rpi-ansible/ansible/bin/pip
+    
+    (ansible) $ pip install ansible
 
 ## Configuration
 
