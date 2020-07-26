@@ -1,5 +1,24 @@
 ---
 macaddrs:
+    dc:a6:32:8c:8a:53:
+        hostname: "cloverdale"
+        domain: "local"
+        locale: "en_US.UTF-8"
+        timezone: "America/Los_Angeles"
+        xkblayout: "us"
+        wifi_country: "US"
+        enable_gui: True
+        enable_autologin: False
+        enable_bootwait: False
+        enable_bootsplash: False
+        enable_camera: False
+        enable_vnc: False
+        enable_spi: False
+        enable_i2c: False
+        enable_serial: True
+        enable_serial_hw: True
+        enable_onewire: False
+        enable_rgpio: False
     b8:27:eb:39:d7:57:
         hostname: "clovermine"
         domain: "local"
