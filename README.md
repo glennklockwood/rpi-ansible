@@ -18,9 +18,14 @@ playbook relies on Ansible 2.8 or newer, which means you can no longer use
     
     $ source ./ansible_env/bin/activate
     
+    # Make sure that pip will install into our virtualenv
     (ansible_env) $ which pip
     /home/pi/src/git/rpi-ansible/ansible/bin/pip
+
+    # Install ansible and any other requirements
+    (ansible_env) $ pip install -r requirements.txt
     
+    # Run playbook
     (ansible_env) $ sudo $(which ansible-playbook) ./local.yml
 
 ## Configuration
