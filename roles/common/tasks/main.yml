@@ -7,14 +7,14 @@
 # Basic hostname setup
 - name: Get MAC address
   debug: 
-    msg: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+    msg: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
   tags:
     - raspi
     - sw
 
 - name: store MAC address
   set_fact:
-    my_macaddr: "{{ hostvars[inventory_hostname].ansible_default_ipv4.macaddress }}"
+    my_macaddr: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
   tags:
     - raspi
     - sw
