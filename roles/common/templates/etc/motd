@@ -1,0 +1,7 @@
+
+{{ myconfig.hostname }}
+{{ ansible_processor_count }} core{% if ansible_processor_count > 1 %}s
+{% endif %}
+{{ ansible_memtotal_mb }} MB RAM
+{{ ansible_lsb.description }}
+--------------------------------------------------------------------------------
