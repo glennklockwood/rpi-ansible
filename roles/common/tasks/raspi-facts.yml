@@ -193,7 +193,7 @@
 
 - name: get Raspberry Pi revision info
   command: awk '/^Revision/ {print $3}' /proc/cpuinfo
-  register: raspi_rev
+  register: raspi_rev_check
   changed_when: False
   check_mode: no
   tags:
@@ -225,14 +225,13 @@
     raspi_gpu_mem_256: "{{ raspi_gpu_mem_256.stdout }}"
     raspi_gpu_mem_512: "{{ raspi_gpu_mem_512.stdout }}"
     raspi_gpu_mem_1024: "{{ raspi_gpu_mem_1024.stdout }}"
-    raspi_rev: "{{ raspi_rev.stdout }}"
   check_mode: no
   tags:
     - raspi
 
 - name: set raspi-config facts (for motd)
   set_fact:
-    raspi_rev: "{{ raspi_rev.stdout }}"
+    raspi_rev: "{{ raspi_rev_check.stdout }}"
   check_mode: no
   tags:
     - raspi
