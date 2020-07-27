@@ -24,7 +24,7 @@ macaddrs:
           - etc/ssh/ssh_host_dsa_key.cloverdale
           - etc/ssh/ssh_host_ecdsa_key.cloverdale
           - etc/ssh/ssh_host_ed25519_key.cloverdale
-    b8:27:eb:39:d7:57:
+    b8:27:eb:6c:82:02:
         hostname: "clovermine"
         domain: "local"
         locale: "en_US.UTF-8"
