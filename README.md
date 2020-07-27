@@ -25,20 +25,18 @@ playbook relies on Ansible 2.8 or newer, which means you can no longer use
     # Install ansible and any other requirements
     (ansible_env) $ pip install -r requirements.txt
     
-    # Run playbook
-    (ansible_env) $ sudo $(which ansible-playbook) ./local.yml
-
 ## Configuration
 
 The `macaddrs` structure in _roles/common/vars/main.yml_ maps the MAC address of
 a Raspberry Pi to its intended configuration state.  Add your Raspberry Pi's MAC
-address to that structure and set its configuration accordingly.
+address (specifically for `eth0` if your RPi has multiple NICs) to that
+structure and set its configuration accordingly.
 
 ## Running the playbook
 
 Then run the playbook:
 
-    $ sudo ansible-playbook local.yml 
+    (ansible_env) $ sudo $(which ansible-playbook) --ask-vault-pass ./local.yml
 
 The playbook will self-discover its settings, then idempotently configure the
 Raspberry Pi.
@@ -54,6 +52,18 @@ to ensure that it does not lock you out of your Raspberry Pi.
    set a password for the pi and/or root users.
 
 2. `usermod --lock pi` to ensure that the default user is completely disabled.
+
+## Optional configurations
+
+### SSH host keys
+
+This playbook can install ssh host keys.  To do so,
+
+1. drop the appropriate `ssh_host_*_key` files into `roles/common/files/etc/ssh/`
+2. rename each file from `ssh_host_*_key` to `ssh_host_*_key.hostname` where
+   `hostname` matches the `hostname` in `roles/common/vars/main.yml` to which
+   the hostkey should be deployed
+3. `ansible-vault encrypt roles/common/files/etc/ssh/ssh_host_*_key.*`
 
 ## Acknowledgment
 

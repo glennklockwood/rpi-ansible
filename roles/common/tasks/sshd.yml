@@ -1,0 +1,83 @@
+---
+# Set ssh host keys
+- name: initialize list of host keys to copy over
+  set_fact:
+    ssh_host_keyfiles: []
+  tags: [ sshd ]
+
+- name: find local copy of dsa host key
+  delegate_to: localhost
+  stat:
+    path: roles/common/files/etc/ssh/ssh_host_dsa_key.{{ myconfig.hostname }}
+  register: result
+  tags: [ sshd ]
+
+- name: add dsa key to list if found
+  set_fact:
+    ssh_host_keyfiles: "{{ ssh_host_keyfiles }} + [ 'etc/ssh/ssh_host_dsa_key.{{ myconfig.hostname }}' ]"
+  when: result.stat.exists == true
+  tags: [ sshd ]
+
+- name: find local copy of rsa host key
+  delegate_to: localhost
+  stat:
+    path: roles/common/files/etc/ssh/ssh_host_rsa_key.{{ myconfig.hostname }}
+  register: result
+  tags: [ sshd ]
+
+- name: add rsa key to list if found
+  set_fact:
+    ssh_host_keyfiles: "{{ ssh_host_keyfiles }} + [ 'etc/ssh/ssh_host_rsa_key.{{ myconfig.hostname }}' ]"
+  when: result.stat.exists == true
+  tags: [ sshd ]
+
+- name: find local copy of ed25519 host key
+  delegate_to: localhost
+  stat:
+    path: roles/common/files/etc/ssh/ssh_host_ed25519_key.{{ myconfig.hostname }}
+  register: result
+  tags: [ sshd ]
+- name: add ed25519 key to list if found
+  set_fact:
+    ssh_host_keyfiles: "{{ ssh_host_keyfiles }} + [ 'etc/ssh/ssh_host_ed25519_key.{{ myconfig.hostname }}' ]"
+  when: result.stat.exists == true
+  tags: [ sshd ]
+
+- name: find local copy of ecdsa host key
+  delegate_to: localhost
+  stat:
+    path: roles/common/files/etc/ssh/ssh_host_ecdsa_key.{{ myconfig.hostname }}
+  register: result
+  tags: [ sshd ]
+- name: add ecdsa key to list if found
+  set_fact:
+    ssh_host_keyfiles: "{{ ssh_host_keyfiles }} + [ 'etc/ssh/ssh_host_ecdsa_key.{{ myconfig.hostname }}' ]"
+  when: result.stat.exists == true
+  tags: [ sshd ]
+
+- name: set SSH host keys
+  copy:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+    owner: root
+    group: root
+    mode: '0600'
+  with_items: "{{ ssh_host_keyfiles }}"
+  register: result
+  tags: [ sshd ]
+
+- name: remove old SSH host public keys
+  file:
+    path: "/{{ item }}.pub"
+    state: absent
+  with_items: "{{ ssh_host_keyfiles }}"
+  when: result is changed
+  tags: [ sshd ]
+
+- name: regenerate SSH host public keys
+  shell:
+    cmd: "ssh-keygen -y -f /{{ item }} > /{{ item }}.pub"
+    creates: "/{{ item }}.pub"
+  with_items: "{{ ssh_host_keyfiles }}"
+  when: result is changed
+  tags: [ sshd ]

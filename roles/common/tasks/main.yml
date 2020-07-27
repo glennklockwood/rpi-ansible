@@ -11,6 +11,7 @@
   tags:
     - raspi
     - sw
+    - sshd
 
 - name: store MAC address
   set_fact:
@@ -18,6 +19,7 @@
   tags:
     - raspi
     - sw
+    - sshd
 
 - name: store system configuration
   set_fact:
@@ -25,6 +27,7 @@
   tags:
     - raspi
     - sw
+    - sshd
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"
@@ -79,6 +82,7 @@
     - raspi
 
 # Other tasks
+- include: sshd.yml
 - include: software.yml
 - include: users.yml
 - include: raspi-config.yml
