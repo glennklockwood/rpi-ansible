@@ -11,6 +11,12 @@
 #  command: "/bin/true"
 #  changed_when: false
 
+- name: import user configs
+  include_vars:
+    file: vars/users.yml
+  tags:
+    - users
+
 ### Create user accounts
 - name: create users
   user: name="{{ item.name }}"

@@ -32,6 +32,10 @@ a Raspberry Pi to its intended configuration state.  Add your Raspberry Pi's MAC
 address (specifically for `eth0` if your RPi has multiple NICs) to that
 structure and set its configuration accordingly.
 
+To add local users, create and edit `roles/common/vars/users.yml`.  Follow the
+structure in `roles/common/vars/users.yml.example`.  You can/should
+`ansible-vault` this file.
+
 ## Running the playbook
 
 Then run the playbook:
