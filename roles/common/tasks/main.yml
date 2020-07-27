@@ -93,6 +93,7 @@
   when: "'darshan_dev' in myconfig and myconfig.darshan_dev"
 
 # Install motd
+# May be easier to pull from /sys/firmware/devicetree/base/model
 - name: load Raspberry Pi hardware history
   include_vars:
     file: vars/raspi-models.yml
