@@ -12,6 +12,7 @@
     - raspi
     - sw
     - sshd
+    - motd
 
 - name: store MAC address
   set_fact:
@@ -20,6 +21,7 @@
     - raspi
     - sw
     - sshd
+    - motd
 
 - name: store system configuration
   set_fact:
@@ -28,6 +30,7 @@
     - raspi
     - sw
     - sshd
+    - motd
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"
@@ -90,13 +93,21 @@
   when: "'darshan_dev' in myconfig and myconfig.darshan_dev"
 
 # Install motd
-- name: install MOTD
+- name: load Raspberry Pi hardware history
+  include_vars:
+    file: vars/raspi-models.yml
+  tags: 
+    - motd
+
+- name: install motd
   template:
     src: etc/motd
     dest: /etc/motd
     owner: root
     group: root
     mode: "0644"
+  tags: 
+    - motd
 
 # Configure firewall
 - name: allow SSH through UFW
