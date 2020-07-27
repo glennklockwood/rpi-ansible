@@ -21,10 +21,17 @@ playbook relies on Ansible 2.8 or newer, which means you can no longer use
     # Make sure that pip will install into our virtualenv
     (ansible_env) $ which pip
     /home/pi/src/git/rpi-ansible/ansible/bin/pip
-
+    
     # Install ansible and any other requirements
     (ansible_env) $ pip install -r requirements.txt
-    
+
+Note that the Python 3.5 that ships with Debian 9.13 doesn't install pip when
+`-m venv` is used as above.  It may be easier to simply use
+
+    $ pip3 install --user ansible
+
+which pollutes your login Python environment, but is better than nothing.
+
 ## Configuration
 
 The `macaddrs` structure in _roles/common/vars/main.yml_ maps the MAC address of
@@ -40,7 +47,7 @@ structure in `roles/common/vars/users.yml.example`.  You can/should
 
 Then run the playbook:
 
-    (ansible_env) $ sudo $(which ansible-playbook) --ask-vault-pass ./local.yml
+    (ansible_env) $ ansible-playbook --ask-vault-pass --become --become-user root --ask-become-pass ./local.yml
 
 The playbook will self-discover its settings, then idempotently configure the
 Raspberry Pi.
