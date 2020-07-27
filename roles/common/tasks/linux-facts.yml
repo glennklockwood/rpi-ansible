@@ -6,7 +6,7 @@
   check_mode: no
 
 - name: get locale
-  shell: "locale | grep ^LANG | cut -d= -f2"
+  shell: "locale | grep '^LANG=' | cut -d= -f2"
   register: linux_locale
   changed_when: False
   check_mode: no
