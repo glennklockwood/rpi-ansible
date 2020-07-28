@@ -66,6 +66,11 @@ macaddrs:
         enable_serial_hw: True
         enable_onewire: False
         enable_rgpio: False
+        ssh_host_key_files:
+          - etc/ssh/ssh_host_rsa_key.cloverleaf
+          - etc/ssh/ssh_host_dsa_key.cloverleaf
+          - etc/ssh/ssh_host_ecdsa_key.cloverleaf
+          - etc/ssh/ssh_host_ed25519_key.cloverleaf
         extra_software:
           - "w3m"
           - "irssi"
