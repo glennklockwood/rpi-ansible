@@ -1,22 +1,31 @@
 ---
 
-# Gather facts specific to the Raspberry Pi platform
-- include: raspi-facts.yml
-- include: linux-facts.yml
-
-# Basic hostname setup
-- name: Get MAC address
-  debug: 
-    msg: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
+# Self identify and load config - this allows the playbook to run on either
+# localhost or a remote host
+- name: store MAC address for eth0
+  set_fact:
+    my_macaddr: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
+  when: inventory_hostname == 'localhost'
   tags:
     - raspi
     - sw
     - sshd
     - motd
 
-- name: store MAC address
+- name: self-identify based on mac address (local mode)
   set_fact:
-    my_macaddr: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
+    myhostname: "{{ macaddrs[my_macaddr] }}"
+  when: inventory_hostname_short == 'localhost'
+  tags:
+    - raspi
+    - sw
+    - sshd
+    - motd
+
+- name: self-identify based on mac address (remote mode)
+  set_fact:
+    myhostname: "{{ inventory_hostname_short }}"
+  when: "inventory_hostname_short != 'localhost'"
   tags:
     - raspi
     - sw
@@ -25,12 +34,19 @@
 
 - name: store system configuration
   set_fact:
-    myconfig: "{{ macaddrs[my_macaddr] }}"
+    myconfig: "{{ hostvars[myhostname] }}"
   tags:
     - raspi
     - sw
     - sshd
     - motd
+
+- debug:
+    var: myconfig
+
+# Gather facts specific to the Raspberry Pi platform
+- include: raspi-facts.yml
+- include: linux-facts.yml
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"

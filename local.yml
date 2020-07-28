@@ -3,5 +3,11 @@
   hosts: localhost
   user: root
   connection: local
+  vars:
+    macaddrs:
+        # mac address of eth0 -> hostname; used to identify self when run against localhost
+        dc:a6:32:8c:8a:53: "cloverdale"
+        b8:27:eb:6c:82:02: "clovermine"
+        b8:27:eb:ff:35:c7: "cloverleaf"
   roles:
     - common

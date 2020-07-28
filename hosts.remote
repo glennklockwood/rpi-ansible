@@ -1,4 +1,4 @@
 [raspberrypi]
-cloverdale.local
-cloverleaf.local
-clovermine.local
+cloverdale ansible_host=cloverdale.local
+cloverleaf ansible_host=cloverleaf.local
+clovermine ansible_host=clovermine.local

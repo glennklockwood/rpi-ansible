@@ -1,0 +1,25 @@
+---
+macaddr: "b8:27:eb:6c:82:02"
+hostname: "clovermine"
+domain: "local"
+locale: "en_US.UTF-8"
+timezone: "America/Los_Angeles"
+xkblayout: "us"
+wifi_country: "US"
+enable_gui: True
+enable_autologin: False
+enable_bootwait: False
+enable_bootsplash: False
+enable_camera: False
+enable_vnc: False
+enable_spi: False
+enable_i2c: False
+enable_serial: True
+enable_serial_hw: True
+enable_onewire: False
+enable_rgpio: False
+darshan_dev: True
+extra_software:
+  - "libglib2.0-dev"
+  - "libncurses-dev"
+  - "libperl-dev"

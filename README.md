@@ -34,10 +34,24 @@ which pollutes your login Python environment, but is better than nothing.
 
 ## Configuration
 
-The `macaddrs` structure in _roles/common/vars/main.yml_ maps the MAC address of
-a Raspberry Pi to its intended configuration state.  Add your Raspberry Pi's MAC
-address (specifically for `eth0` if your RPi has multiple NICs) to that
-structure and set its configuration accordingly.
+This playbook can be run on localhost or against one or more remote hosts.  The
+former is good for a bare Raspberry Pi that was freshly provisioned using NOOBS
+or the like, as you don't need a second host to act as the provisioning host.
+The latter is the conventional way in which ansible is typically run and makes
+more sense if you want to configure a bunch of Raspberry Pis.
+
+### Local Mode
+
+Edit `local.yml` and add the mac address of `eth0` for the Raspberry Pi to
+configure to the `macaddrs` variable.  Its key should be a mac address (all
+lower case) and the value should be the short hostname of that system.  Each
+such entry's short hostname must match a file in the `host_vars/` directory.
+
+### All modes
+
+The contents of each file in `host_vars/` is the intended configuration state
+for each Raspberry Pi.  Look at one of the examples included to get a feel for
+the configurations available.
 
 To add local users, create and edit `roles/common/vars/users.yml`.  Follow the
 structure in `roles/common/vars/users.yml.example`.  You can/should
@@ -45,12 +59,22 @@ structure in `roles/common/vars/users.yml.example`.  You can/should
 
 ## Running the playbook
 
+### Local Mode
+
 Then run the playbook:
 
-    (ansible_env) $ ansible-playbook --ask-vault-pass --become --become-user root --ask-become-pass ./local.yml
+    (ansible_env) $ ansible-playbook --ask-vault-pass --become --become-user root --ask-become-pass --inventory hosts ./local.yml
 
 The playbook will self-discover its settings, then idempotently configure the
 Raspberry Pi.
+
+### Remote Mode
+
+This is similar to local mode:
+
+    (ansible_env) $ ansible-playbook --ask-vault-pass --inventory hosts.remote ./remote.yml
+
+The playbook follows the same code path.
 
 ## After running the playbook
 
@@ -89,17 +113,6 @@ The format expected in `roles/common/vars/main.yml` is something like
               - etc/ssh/ssh_host_dsa_key.cloverdale
               - etc/ssh/ssh_host_ecdsa_key.cloverdale
               - etc/ssh/ssh_host_ed25519_key.cloverdale
-
-### Remote mode
-
-The playbooks can also be run in a traditional remote mode:
-
-    $ ansible-playbook --ask-become-pass --ask-vault-pass --inventory hosts.remote ./remote.yml
-
-At present this does _not_ make use of hostvars; this is because the playbook
-started out designed to be run against localhost and the playbook
-self-identifies the system and fetches configuration variables from
-`roles/common/vars/main.yml` based on that.
 
 ## Acknowledgment
 
