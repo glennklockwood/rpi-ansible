@@ -90,6 +90,17 @@ The format expected in `roles/common/vars/main.yml` is something like
               - etc/ssh/ssh_host_ecdsa_key.cloverdale
               - etc/ssh/ssh_host_ed25519_key.cloverdale
 
+### Remote mode
+
+The playbooks can also be run in a traditional remote mode:
+
+    $ ansible-playbook --ask-become-pass --ask-vault-pass --inventory hosts.remote ./remote.yml
+
+At present this does _not_ make use of hostvars; this is because the playbook
+started out designed to be run against localhost and the playbook
+self-identifies the system and fetches configuration variables from
+`roles/common/vars/main.yml` based on that.
+
 ## Acknowledgment
 
 I stole a lot of knowledge from https://github.com/giuaig/ansible-raspi-config/.
