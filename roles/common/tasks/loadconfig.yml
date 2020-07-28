@@ -4,12 +4,25 @@
 - name: store MAC address for eth0
   set_fact:
     my_macaddr: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
-  when: inventory_hostname == 'localhost'
+  when: "inventory_hostname == 'localhost' and 'ansible_eth0' in hostvars[inventory_hostname]"
   tags:
     - raspi
     - sw
     - sshd
     - motd
+
+# Raspberry Pi Zero W has no eth0, so fall back to wlan0
+- name: store MAC address for wlan0
+  set_fact:
+    my_macaddr: "{{ hostvars[inventory_hostname].ansible_wlan0.macaddress }}"
+  when: "inventory_hostname == 'localhost' and my_macaddr is not defined"
+  tags:
+    - raspi
+    - sw
+    - sshd
+    - motd
+
+# for model A, we cannot proceed because there is no mac address
 
 - name: load raspberry pi configuration (local mode)
   include_vars:
