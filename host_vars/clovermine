@@ -19,6 +19,11 @@ enable_serial_hw: True
 enable_onewire: False
 enable_rgpio: False
 darshan_dev: True
+ssh_host_key_files:
+  - etc/ssh/ssh_host_rsa_key.clovermine
+  - etc/ssh/ssh_host_dsa_key.clovermine
+  - etc/ssh/ssh_host_ecdsa_key.clovermine
+  - etc/ssh/ssh_host_ed25519_key.clovermine
 extra_software:
   - "libglib2.0-dev"
   - "libncurses-dev"
