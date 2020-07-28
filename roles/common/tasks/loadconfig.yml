@@ -1,0 +1,39 @@
+---
+# Self identify and load config - this allows the playbook to run on either
+# localhost or a remote host
+- name: store MAC address for eth0
+  set_fact:
+    my_macaddr: "{{ hostvars[inventory_hostname].ansible_eth0.macaddress }}"
+  when: inventory_hostname == 'localhost'
+  tags:
+    - raspi
+    - sw
+    - sshd
+    - motd
+
+- name: load raspberry pi configuration (local mode)
+  include_vars:
+    file: "../../../host_vars/{{ macaddrs[my_macaddr] }}"
+    name: myconfig
+  when: inventory_hostname_short == 'localhost'
+  tags:
+    - raspi
+    - sw
+    - sshd
+    - motd
+
+- name: load raspberry pi configuration (remote mode)
+  set_fact:
+    myconfig: "{{ hostvars[inventory_hostname_short] }}"
+  when: "inventory_hostname_short != 'localhost'"
+  tags:
+    - raspi
+    - sw
+    - sshd
+    - motd
+
+- debug:
+    msg: "loaded configuration for {{ myconfig.hostname }}"
+
+- assert:
+    that: "{{ myconfig|length > 0 }}"
