@@ -1,12 +1,17 @@
-# Raspberry Pi Ansible
+# Raspberry Pi Ansible Playbook
 
-Glenn K. Lockwood, October 2018
+Glenn K. Lockwood, October 2018 - July 2020.
 
 ## Introduction
 
 This is an Ansible configuration that configures a fresh Raspbian installation
-on Raspberry Pi.  It is intended to be run in local (pull) mode, where ansible
-is running on the same Raspberry Pi to be configured.
+on Raspberry Pi.  It can be run in local (pull) mode, where ansible is running
+on the same Raspberry Pi to be configured, or standard remote mode.
+
+This playbook is known to run on Raspbian stretch (9) and Raspberry Pi OS
+buster (10).  I've not been able to run it on jessie because that ships with
+Python 2.4, which is not supported by Ansible.  It can run against jessie in
+remote mode.  See below.
 
 ## Bootstrapping on Raspbian
 
@@ -15,6 +20,12 @@ playbook relies on Ansible 2.8 or newer, which means you can no longer use
 `sudo apt-get install ansible`.  Instead, you must
 
     $ python3 -m venv --system-site-packages ansible_env
+
+If this fails, you may need to:
+
+    $ sudo apt install python3-apt python3-virtualenv
+
+Then activate the environment and install ansible:
     
     $ source ./ansible_env/bin/activate
     
@@ -38,7 +49,8 @@ This playbook can be run on localhost or against one or more remote hosts.  The
 former is good for a bare Raspberry Pi that was freshly provisioned using NOOBS
 or the like, as you don't need a second host to act as the provisioning host.
 The latter is the conventional way in which ansible is typically run and makes
-more sense if you want to configure a bunch of Raspberry Pis.
+more sense if you want to configure a bunch of Raspberry Pis.  Depending on
+the mode you intend to use, the configuration is slightly different.
 
 ### Local Mode
 
@@ -72,7 +84,7 @@ Raspberry Pi.
 
 This is similar to local mode:
 
-    (ansible_env) $ ansible-playbook --ask-vault-pass --inventory hosts.remote ./remote.yml
+    (ansible_env) $ ansible-playbook --ask-vault-pass --ask-become-pass --inventory hosts.remote ./remote.yml
 
 The playbook follows the same code path.
 

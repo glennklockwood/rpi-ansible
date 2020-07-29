@@ -1,2 +1,1 @@
-python-apt
 ansible>=2.8
