@@ -24,5 +24,10 @@ ssh_host_key_files:
   - etc/ssh/ssh_host_ed25519_key.cloverdale
 extra_software:
   - autoconf
+  - screen
+  # libpcre3-dev for tt++
   - libpcre3-dev
+  # for irssi
   - libncurses-dev
+  - libperl-dev
+  - libglib2.0-dev
