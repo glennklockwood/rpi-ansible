@@ -22,3 +22,7 @@ ssh_host_key_files:
   - etc/ssh/ssh_host_dsa_key.cloverdale
   - etc/ssh/ssh_host_ecdsa_key.cloverdale
   - etc/ssh/ssh_host_ed25519_key.cloverdale
+extra_software:
+  - autoconf
+  - libpcre3-dev
+  - libncurses-dev
