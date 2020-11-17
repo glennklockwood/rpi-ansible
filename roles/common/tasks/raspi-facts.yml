@@ -48,7 +48,7 @@
     - raspi
 
 - name: get wifi country
-  shell: "raspi-config nonint get_wifi_country"
+  shell: "raspi-config nonint get_wifi_country || echo unknown"
   register: raspi_wifi_country
   changed_when: False
   check_mode: no

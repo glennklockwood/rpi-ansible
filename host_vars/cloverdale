@@ -4,7 +4,6 @@ domain: "local"
 locale: "en_US.UTF-8"
 timezone: "America/Los_Angeles"
 xkblayout: "us"
-wifi_country: "US"
 enable_gui: True
 enable_autologin: False
 enable_bootwait: False
@@ -31,3 +30,5 @@ extra_software:
   - libncurses-dev
   - libperl-dev
   - libglib2.0-dev
+  # for the mud
+  - libyaml-dev
