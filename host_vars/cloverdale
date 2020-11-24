@@ -32,3 +32,10 @@ extra_software:
   - libglib2.0-dev
   # for the mud
   - libyaml-dev
+  # for pelican
+  - python3-virtualenv
+  - python3-pandas
+  - python3-yaml
+  - python3-tabulate
+  - python3-markdown
+  - python3-bs4
