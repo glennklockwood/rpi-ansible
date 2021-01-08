@@ -1,3 +1,5 @@
+jetson ansible_host=jetson.local
+
 [raspberrypi]
 cloverdale ansible_host=cloverdale.local
 cloverleaf ansible_host=cloverleaf.local

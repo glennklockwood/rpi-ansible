@@ -1,0 +1,19 @@
+---
+- hosts: jetson
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+  - name: install sw
+    apt:
+      name="{{ packages }}"
+      state=present
+      update_cache=yes
+    vars:
+      packages:
+        - vim
+        - git
+        - gfortran
+        - gfortran-doc
+    tags:
+      - sw
