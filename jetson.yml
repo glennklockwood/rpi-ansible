@@ -6,15 +6,16 @@
   tasks:
   - name: install sw
     apt:
-      name="{{ packages }}"
-      state=present
-      update_cache=yes
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
     vars:
       packages:
         - vim
         - git
-        - gfortran
-        - gfortran-doc
+# use NVIDIA HPC SDK instead: https://ngc.nvidia.com/catalog/containers/nvidia:nvhpc
+#       - gfortran
+#       - gfortran-doc
     tags:
       - sw
 
