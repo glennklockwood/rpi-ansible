@@ -64,3 +64,11 @@
   when: st.stat.islnk is not defined
   tags:
     - swap
+
+- name: "add cuda to default path"
+  copy:
+    src: etc/profile.d/cuda.sh
+    dest: /etc/profile.d/cuda.sh
+    mode: 0644
+    owner: root
+    group: root
