@@ -72,3 +72,28 @@
     mode: 0644
     owner: root
     group: root
+
+# this should be already created on JetPack
+- name: "create docker group"
+  group:
+    name: docker
+    state: present
+  register: users
+
+- name: "get list of existing users"
+  getent:
+    database: passwd
+  tags:
+    - users
+
+- name: "add user 1000 to docker group"
+  user:
+    name: "{{ item.0 }}"
+    groups:
+      - docker
+  #debug:
+    #msg: "name: {{ item.0 }} uid: {{ item[1][1] }}"
+  loop: "{{ getent_passwd.items() | list }}"
+  when: item[1][1] | int == 1000
+  tags:
+    - users
