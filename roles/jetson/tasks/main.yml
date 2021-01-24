@@ -8,9 +8,16 @@
     packages:
       - vim
       - git
-# use NVIDIA HPC SDK instead: https://ngc.nvidia.com/catalog/containers/nvidia:nvhpc
-#       - gfortran
-#       - gfortran-doc
+      - python3-venv
+      - python3-dev     # needed for many python packages built from source
+      - python3-wheel   # for simplifying pip install
+      - docker-compose
+# for installing docker-compose from pypi
+#     - libffi-dev      # for pip install docker-compose
+#     - libssl-dev      # for pip install docker-compose
+# try using NVIDIA HPC SDK instead: https://ngc.nvidia.com/catalog/containers/nvidia:nvhpc
+#     - gfortran
+#     - gfortran-doc
   tags:
     - sw
 
@@ -73,6 +80,16 @@
     owner: root
     group: root
 
+- name: "docker: install nvidia runtime as default"
+  copy:
+    src: etc/docker/daemon.json
+    dest: /etc/docker/daemon.json
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - "restart docker"
+
 # this should be already created on JetPack
 - name: "create docker group"
   group:
@@ -91,6 +108,7 @@
     name: "{{ item.0 }}"
     groups:
       - docker
+    append: True
   #debug:
     #msg: "name: {{ item.0 }} uid: {{ item[1][1] }}"
   loop: "{{ getent_passwd.items() | list }}"
