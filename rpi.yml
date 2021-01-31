@@ -2,3 +2,4 @@
 - hosts: raspberrypi
   roles:
     - common
+    - rpi

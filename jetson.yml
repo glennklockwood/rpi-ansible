@@ -1,4 +1,5 @@
 ---
 - hosts: jetson
   roles:
+    - common
     - jetson
