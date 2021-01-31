@@ -3,54 +3,58 @@
 #  Add swapfile per Jetson Nano DLI setup instructions.  Not recommended on a
 #  32 GB (or smaller) SD card.
 #
-- name: "create 4 GB swap - disable nvzramconfig"
+- name: "create swap - disable nvzramconfig"
   systemd:
     name: nvzramconfig
     enabled: no
+  when: swapsize_gb > 0
   tags:
     - swap
 
-- name: "check if 4G swap file exists"
+- name: "check if swap file exists"
   stat:
-    path: /mnt/4GB.swap
+    path: "/mnt/{{ swapsize_gb }}GB.swap"
   register: st
+  when: swapsize_gb > 0
   tags:
     - swap
 
 - name: "create swap file if not exists"
-  command: fallocate -l 4G /mnt/4GB.swap
-  when: st.stat.islnk is not defined
+  command: "fallocate -l {{ swapsize_gb }}G /mnt/{{ swapsize_gb }}GB.swap"
+  when: swapsize_gb > 0 and st.stat.islnk is not defined
   tags:
     - swap
 
-- name: "verify permission on 4G swap file"
+- name: "verify permission on swap file"
   file: 
-    path: /mnt/4GB.swap
+    path: "/mnt/{{ swapsize_gb }}GB.swap"
     owner: root
     group: root
     mode: 0600
+  when: swapsize_gb > 0
   tags:
     - swap
 
 - name: "register swap file"
-  command: mkswap /mnt/4GB.swap
-  when: st.stat.islnk is not defined
+  command: "mkswap /mnt/{{ swapsize_gb }}GB.swap"
+  when: swapsize_gb > 0 and st.stat.islnk is not defined
   tags:
     - swap
 
 - name: "verify swap will mount"
   mount:
-    src: /mnt/4GB.swap
+    src: "/mnt/{{ swapsize_gb }}GB.swap"
     opts: defaults
     state: present
     fstype: swap
     path: swap
+  when: swapsize_gb > 0
   tags:
     - swap
 
 - name: "mount swap"
-  command: swapon /mnt/4GB.swap
-  when: st.stat.islnk is not defined
+  command: "swapon /mnt/{{ swapsize_gb }}GB.swap"
+  when: swapsize_gb > 0 and st.stat.islnk is not defined
   tags:
     - swap
 

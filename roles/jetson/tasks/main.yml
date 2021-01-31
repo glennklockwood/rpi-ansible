@@ -65,3 +65,5 @@
   when: item[1][1] | int == 1000
   tags:
     - users
+
+- include: swap.yml
