@@ -1,0 +1,15 @@
+---
+# Install software required for all environments
+- name: install basic software environment
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - vim
+      - screen
+      - git
+      - ufw
+  tags:
+    - sw

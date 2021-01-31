@@ -1,10 +1,21 @@
 ---
+# Install required software
+- name: install software for Raspberry Pi
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+      - python-pip
+  tags:
+    - sw
 
 # Uninstall Raspbian bloat
 - name: remove raspbian bloat
   apt:
-    name="{{ packages }}"
-    state=absent
+    name: "{{ packages }}"
+    state: absent
   vars:
     packages:
       - wolfram-engine
@@ -20,26 +31,11 @@
   tags:
     - sw
 
-# Install required software
-- name: install basic software environment
+- name: install additional host-specific software
   apt:
-    name="{{ packages }}"
-    state=present
-    update_cache=yes
-  vars:
-    packages:
-      - vim
-      - git
-      - python-pip
-      - ufw
-  tags:
-    - sw
-
-- name: install additional software
-  apt:
-    name="{{ myconfig.extra_software }}"
-    state=present
-    update_cache=yes
+    name: "{{ myconfig.extra_software }}"
+    state: present
+    update_cache: yes
   when: "'extra_software' in myconfig"
   tags:
     - sw

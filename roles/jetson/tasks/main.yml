@@ -1,27 +1,4 @@
 ---
-- name: install sw
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-  vars:
-    packages:
-      - vim
-      - screen
-      - git
-      - python3-venv
-      - python3-dev     # needed for many python packages built from source
-      - python3-wheel   # for simplifying pip install
-      - docker-compose
-# for installing docker-compose from pypi
-#     - libffi-dev      # for pip install docker-compose
-#     - libssl-dev      # for pip install docker-compose
-# try using NVIDIA HPC SDK instead: https://ngc.nvidia.com/catalog/containers/nvidia:nvhpc
-#     - gfortran
-#     - gfortran-doc
-  tags:
-    - sw
-
 - name: "add cuda to default path"
   copy:
     src: etc/profile.d/cuda.sh
@@ -59,11 +36,10 @@
     groups:
       - docker
     append: True
-  #debug:
-    #msg: "name: {{ item.0 }} uid: {{ item[1][1] }}"
   loop: "{{ getent_passwd.items() | list }}"
   when: item[1][1] | int == 1000
   tags:
     - users
 
 - include: swap.yml
+- include: software.yml
