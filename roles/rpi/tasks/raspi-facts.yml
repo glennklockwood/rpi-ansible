@@ -145,7 +145,7 @@
 
 - name: get overscan setting
   shell: "raspi-config nonint get_overscan"
-  register: raspi_overscan
+  register: raspi_overscan_enabled
   changed_when: False
   check_mode: no
   tags:
@@ -220,7 +220,7 @@
     raspi_rgpio_enabled: "{{ raspi_rgpio_disabled.stdout == '0' }}"
     raspi_overclock: "{{ raspi_overclock.stdout }}"
     raspi_fs_expandable: "{{ raspi_fs_unexpandable.stdout == '0' and (raspi_last_alloced_sector.stdout|int + 1) < ansible_devices.mmcblk0.sectors|int }}"
-    raspi_overscan: "{{ raspi_overscan.stdout }}"
+    raspi_overscan_enabled: "{{ raspi_overscan_enabled.stdout }}"
     raspi_gpu_mem: "{{ raspi_gpu_mem.stdout }}"
     raspi_gpu_mem_256: "{{ raspi_gpu_mem_256.stdout }}"
     raspi_gpu_mem_512: "{{ raspi_gpu_mem_512.stdout }}"
