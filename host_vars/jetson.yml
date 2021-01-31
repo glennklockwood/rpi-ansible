@@ -1,5 +1,5 @@
 ---
-swapsize_gb: 2      # set to 0 to disable play
+swapsize_gb: 0      # set to 0 to disable play
 host_software:
   - python3-venv
   - python3-dev     # needed for many python packages built from source
