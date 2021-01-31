@@ -1,10 +1,10 @@
 --------------------------------------------------------------------------------
-{% if myconfig.hostname == "some_specific_hostname" %}
+{% if raspi_hostname == "some_specific_hostname" %}
 {% else %}
      .~~.   .~~.
     '. \ ' ' / .'
      .~ .~~~..~.
-    : .~.'~'.~. :     {{ myconfig.hostname }}
+    : .~.'~'.~. :     {{ raspi_hostname }}
    ~ (   ) (   ) ~    Raspberry Pi {% if raspi_rev in raspi_models %}{{ raspi_models[raspi_rev].model }}{% else %}Revision {{ raspi_rev }}{% endif %} 
   ( : '~'.~.'~' : )   {{ ansible_processor_count }} core{% if ansible_processor_count > 1 %}s{% endif %}, {% if raspi_rev in raspi_models %}{{ raspi_models[raspi_rev].mem }}{% else %}{{ ansible_memtotal_mb }} MB{% endif %} RAM
    ~ .~ (   ) ~. ~    {{ ansible_lsb.description }}

@@ -1,8 +1,8 @@
 ---
-hostname: "cloverdale"
-domain: "local"
-locale: "en_US.UTF-8"
-timezone: "America/Los_Angeles"
+raspi_hostname: "cloverdale"
+raspi_domain: "local"
+raspi_locale: "en_US.UTF-8"
+raspi_timezone: "America/Los_Angeles"
 xkblayout: "us"
 enable_gui: True
 enable_autologin: False

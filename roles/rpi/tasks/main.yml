@@ -6,14 +6,14 @@
 - include: linux-facts.yml
 
 - name: set hostname
-  shell: "raspi-config nonint do_hostname {{ myconfig.hostname }}"
-  when: raspi_hostname != myconfig.hostname
+  shell: "raspi-config nonint do_hostname {{ raspi_hostname }}"
+  when: current_hostname != raspi_hostname
 
 - name: update /etc/hosts with new hostname
   lineinfile:
     dest=/etc/hosts
     regexp="^{{ ansible_default_ipv4.address }}"
-    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ myconfig.hostname }}.{{ myconfig.domain }}{{'\t'}}{{ myconfig.hostname }}"
+    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ raspi_hostname }}.{{ raspi_domain }}{{'\t'}}{{ raspi_hostname }}"
     state=present
 
 - name: get rid of default 127.0.1.1 binding
@@ -24,23 +24,23 @@
 
 # Set timezone
 - name: set timezone
-  command: "timedatectl set-timezone {{ myconfig.timezone }}"
-  when: linux_tz != myconfig.timezone
+  command: "timedatectl set-timezone {{ raspi_timezone }}"
+  when: linux_tz != raspi_timezone
 
 # Set locale
 - name: set locale
-  command: "raspi-config nonint do_change_locale {{ myconfig.locale }}"
-  when: "'locale' in myconfig and linux_locale != myconfig.locale"
+  command: "raspi-config nonint do_change_locale {{ raspi_locale }}"
+  when: "locale|default(false) and linux_locale != raspi_locale"
 
 # Set X keyboard layout
 - name: set X11 keyboard layout
-  command: "raspi-config nonint do_configure_keyboard {{ myconfig.xkblayout }}"
-  when: "'xkblayout' in myconfig and myconfig.xkblayout != linux_xkblayout"
+  command: "raspi-config nonint do_configure_keyboard {{ xkblayout }}"
+  when: "xkblayout|default(false) and linux_xkblayout != xkblayout"
 
 # Set wifi country
 - name: set wifi country
-  command: "raspiconfig nonint do_wifi_country {{ myconfig.wifi_country }}"
-  when: "'wifi_country' in myconfig and myconfig.wifi_country != raspi_wifi_country"
+  command: "raspiconfig nonint do_wifi_country {{ wifi_country }}"
+  when: "wifi_country|default(false) and wifi_country != raspi_wifi_country"
 
 # Enable sshd
 - name: disable ssh login for user pi
@@ -62,14 +62,14 @@
 - include: users.yml
 - include: raspi-config.yml
 - include: darshan-dev.yml
-  when: "'darshan_dev' in myconfig and myconfig.darshan_dev"
+  when: "darshan_dev|default(false)"
 
 # Install motd
 # May be easier to pull from /sys/firmware/devicetree/base/model
 - name: load Raspberry Pi hardware history
   include_vars:
     file: vars/raspi-models.yml
-  tags: 
+  tags:
     - motd
 
 - name: install motd
@@ -79,7 +79,7 @@
     owner: root
     group: root
     mode: "0644"
-  tags: 
+  tags:
     - motd
 
 - include: ufw.yml

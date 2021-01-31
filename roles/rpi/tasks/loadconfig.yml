@@ -26,8 +26,7 @@
 
 - name: load raspberry pi configuration (local mode)
   include_vars:
-    file: "../../../host_vars/{{ macaddrs[my_macaddr] }}"
-    name: myconfig
+    file: "../../../host_vars/{{ macaddrs[my_macaddr] }}.yml"
   when: inventory_hostname_short == 'localhost'
   tags:
     - raspi
@@ -35,18 +34,10 @@
     - sshd
     - motd
 
-- name: load raspberry pi configuration (remote mode)
-  set_fact:
-    myconfig: "{{ hostvars[inventory_hostname_short] }}"
-  when: "inventory_hostname_short != 'localhost'"
-  tags:
-    - raspi
-    - sw
-    - sshd
-    - motd
+- name: assert that configuration is loaded
+  assert:
+    that:
+      - "raspi_hostname | default(false)"
 
 - debug:
-    msg: "loaded configuration for {{ myconfig.hostname }}"
-
-- assert:
-    that: "{{ myconfig|length > 0 }}"
+    msg: "loaded configuration for {{ raspi_hostname }}"

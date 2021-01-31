@@ -12,3 +12,4 @@
         b8:27:eb:83:4a:28: "clovermill"
   roles:
     - common
+    - rpi
