@@ -7,6 +7,7 @@
   vars:
     packages:
       - vim
+      - screen
       - git
       - python3-venv
       - python3-dev     # needed for many python packages built from source
@@ -20,57 +21,6 @@
 #     - gfortran-doc
   tags:
     - sw
-
-- name: "create 4 GB swap - disable nvzramconfig"
-  systemd:
-    name: nvzramconfig
-    enabled: no
-  tags:
-    - swap
-
-- name: "check if 4G swap file exists"
-  stat:
-    path: /mnt/4GB.swap
-  register: st
-  tags:
-    - swap
-
-- name: "create swap file if not exists"
-  command: fallocate -l 4G /mnt/4GB.swap
-  when: st.stat.islnk is not defined
-  tags:
-    - swap
-
-- name: "verify permission on 4G swap file"
-  file: 
-    path: /mnt/4GB.swap
-    owner: root
-    group: root
-    mode: 0600
-  tags:
-    - swap
-
-- name: "register swap file"
-  command: mkswap /mnt/4GB.swap
-  when: st.stat.islnk is not defined
-  tags:
-    - swap
-
-- name: "verify swap will mount"
-  mount:
-    src: /mnt/4GB.swap
-    opts: defaults
-    state: present
-    fstype: swap
-    path: swap
-  tags:
-    - swap
-
-- name: "mount swap"
-  command: swapon /mnt/4GB.swap
-  when: st.stat.islnk is not defined
-  tags:
-    - swap
 
 - name: "add cuda to default path"
   copy:
