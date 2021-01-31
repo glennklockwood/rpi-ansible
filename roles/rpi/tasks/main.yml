@@ -58,7 +58,6 @@
     - raspi
 
 # Other tasks
-- include: sshd.yml
 - include: software.yml
 - include: users.yml
 - include: raspi-config.yml

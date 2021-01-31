@@ -18,8 +18,3 @@ enable_serial_hw: False
 enable_onewire: False
 enable_rgpio: False
 darshan_dev: False
-ssh_host_key_files:
-  - etc/ssh/ssh_host_rsa_key.clovermill
-  - etc/ssh/ssh_host_dsa_key.clovermill
-  - etc/ssh/ssh_host_ecdsa_key.clovermill
-  - etc/ssh/ssh_host_ed25519_key.clovermill

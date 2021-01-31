@@ -94,24 +94,10 @@ to ensure that it does not lock you out of your Raspberry Pi.
 This playbook can install ssh host keys.  To do so,
 
 1. Drop the appropriate `ssh_host_*_key` files into `roles/common/files/etc/ssh/`
-2. Rename each file from `ssh_host_*_key` to `ssh_host_*_key.hostname` where
-   `hostname` matches the `hostname` in `roles/common/vars/main.yml` to which
-   the hostkey should be deployed
+2. Rename each file from `ssh_host_*_key` to `ssh_host_*_key.{{ ansible_hostname }}`
 3. `ansible-vault encrypt roles/common/files/etc/ssh/ssh_host_*_key.*`
-4. Add these files to `roles/common/vars/main.yml`
 
-The format expected in `roles/common/vars/main.yml` is something like
-
-    ---
-    macaddrs:
-        dc:a6:32:8c:8a:53:
-            hostname: "cloverdale"
-            # ...
-            ssh_host_key_files:
-              - etc/ssh/ssh_host_rsa_key.cloverdale
-              - etc/ssh/ssh_host_dsa_key.cloverdale
-              - etc/ssh/ssh_host_ecdsa_key.cloverdale
-              - etc/ssh/ssh_host_ed25519_key.cloverdale
+The playbook will detect the presence of these files and install them.
 
 ## Acknowledgment
 

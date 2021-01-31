@@ -1,0 +1,114 @@
+---
+#
+# Set ssh host keys
+#
+- name: check which SSH host keys are available
+  local_action: "stat path=\"{{ role_path }}/files/{{ item }}.{{ inventory_hostname }}\""
+  loop: "{{ ssh_host_key_files }}"
+  register: result
+  tags:
+    - sshd
+
+# at this point, each element of result.results looks like
+#   {
+#       "ansible_loop_var": "item",
+#       "changed": false,
+#       "failed": false,
+#       "invocation": {
+#           "module_args": {
+#               "checksum_algorithm": "sha1",
+#               "follow": false,
+#               "get_attributes": true,
+#               "get_checksum": true,
+#               "get_md5": false,
+#               "get_mime": true,
+#               "path": "/home/glock/src/git/rpi-ansible/roles/common/files/etc/ssh/ssh_host_rsa_key.jetson"
+#           }
+#       },
+#       "item": "etc/ssh/ssh_host_rsa_key",
+#       "stat": {
+#           "exists": false
+#       }
+#   },
+
+- name: set SSH host keys
+  copy:
+    src: "{{ item.invocation.module_args.path}}"
+    dest: "/{{ item.item }}"
+    owner: root
+    group: root
+    mode: '0600'
+  loop: "{{ result.results }}"
+  when: item.stat.exists
+  register: result
+  tags:
+    - sshd
+
+# at this point, each element of result.results looks like
+#   {
+#       "ansible_loop_var": "item",
+#       "changed": false,
+#       "checksum": "a6a3094160f7a27a98b6ab7b5ef34877485b77ef",
+#       "dest": "/etc/ssh/ssh_host_rsa_key",
+#       "diff": {
+#           "after": {
+#               "path": "/etc/ssh/ssh_host_rsa_key"
+#           },
+#           "before": {
+#               "path": "/etc/ssh/ssh_host_rsa_key"
+#           }
+#       },
+#       "failed": false,
+#       "gid": 0,
+#       "group": "root",
+#       "invocation": {
+#           "module_args": {
+#               "_diff_peek": null,
+#               "_original_basename": "ssh_host_rsa_key.cloverdale",
+#               "access_time": null,
+#               "access_time_format": "%Y%m%d%H%M.%S",
+#               "attributes": null,
+#               "backup": null,
+#               "content": null,
+#               "delimiter": null,
+#               "dest": "/etc/ssh/ssh_host_rsa_key",
+#               "directory_mode": null,
+#               "follow": true,
+#               "force": false,
+#               "group": "root",
+#               "mode": "0600",
+#               "modification_time": null,
+#               "modification_time_format": "%Y%m%d%H%M.%S",
+#               "owner": "root",
+#               "path": "/etc/ssh/ssh_host_rsa_key",
+#               "recurse": false,
+#               "regexp": null,
+#               "remote_src": null,
+#               "selevel": null,
+#               "serole": null,
+#               "setype": null,
+#               "seuser": null,
+#               "src": null,
+#               "state": "file",
+#               "unsafe_writes": null
+#           }
+#       },
+
+- name: remove old SSH host public keys
+  file:
+    path: "/{{ item.invocation.module_args.dest }}.pub"
+    state: absent
+  loop: "{{ result.results }}"
+  when: item.changed
+  register: result
+  tags:
+    - sshd
+
+- name: regenerate SSH host public keys
+  shell:
+    cmd: "ssh-keygen -y -f {{ item.invocation.module_args.path.split('.')[0] }} > /{{ item.invocation.module_args.path }}"
+    creates: "/{{ item.invocation.module_args.path }}"
+  loop: "{{ result.results }}"
+  when: item.changed
+  tags:
+    - sshd
