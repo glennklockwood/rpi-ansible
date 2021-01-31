@@ -45,22 +45,6 @@ which pollutes your login Python environment, but is better than nothing.
 
 ## Configuration
 
-This playbook can be run on localhost or against one or more remote hosts.  The
-former is good for a bare Raspberry Pi that was freshly provisioned using NOOBS
-or the like, as you don't need a second host to act as the provisioning host.
-The latter is the conventional way in which ansible is typically run and makes
-more sense if you want to configure a bunch of Raspberry Pis.  Depending on
-the mode you intend to use, the configuration is slightly different.
-
-### Local Mode
-
-Edit `local.yml` and add the mac address of `eth0` for the Raspberry Pi to
-configure to the `macaddrs` variable.  Its key should be a mac address (all
-lower case) and the value should be the short hostname of that system.  Each
-such entry's short hostname must match a file in the `host_vars/` directory.
-
-### All modes
-
 The contents of each file in `host_vars/` is the intended configuration state
 for each Raspberry Pi.  Look at one of the examples included to get a feel for
 the configurations available.
@@ -69,24 +53,27 @@ To add local users, create and edit `roles/common/vars/users.yml`.  Follow the
 structure in `roles/common/vars/users.yml.example`.  You can/should
 `ansible-vault` this file.
 
-## Running the playbook
+## Using Local Mode
 
-### Local Mode
+Edit `local.yml` and add the mac address of `eth0` for the Raspberry Pi to
+configure to the `macaddrs` variable.  Its key should be a mac address (all
+lower case) and the value should be the short hostname of that system.  Each
+such entry's short hostname must match a file in the `host_vars/` directory.
 
 Then run the playbook:
 
-    (ansible_env) $ ansible-playbook --ask-vault-pass --become --become-user root --ask-become-pass --inventory hosts ./local.yml
+    (ansible_env) $ ansible-playbook ./local.yml
 
 The playbook will self-discover its settings, then idempotently configure the
 Raspberry Pi.
 
-### Remote Mode
+## Using Remote Mode
 
-This is similar to local mode:
+Run one of the playbooks as you would do normally:
 
-    (ansible_env) $ ansible-playbook --ask-vault-pass --ask-become-pass --inventory hosts.remote ./remote.yml
+    (ansible_env) $ ansible-playbook ./rpi.yml
 
-The playbook follows the same code path.
+The default hosts file and `become_*` configurations are set in ansible.cfg.
 
 ## After running the playbook
 

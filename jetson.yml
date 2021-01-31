@@ -1,0 +1,4 @@
+---
+- hosts: jetson
+  roles:
+    - jetson
