@@ -1,0 +1,50 @@
+---
+#
+# Configure firewall
+#
+- name: allow SSH through UFW
+  ufw:
+    rule: allow
+    port: ssh
+    proto: tcp
+    log: yes
+  tags:
+    - ufw
+
+- name: allow mDNS through UFW
+  ufw:
+    rule: allow
+    to_ip: 224.0.0.251
+    proto: igmp
+    log: no
+  tags:
+    - ufw
+
+- name: drop multicast without logging
+  ufw:
+    rule: deny
+    to_ip: 224.0.0.1
+    log: no
+  tags:
+    - ufw
+
+- name: set default incoming UFW policy to deny
+  ufw:
+    direction: incoming
+    policy: deny
+  tags:
+    - ufw
+
+- name: set default outgoing UFW policy to allow
+  ufw:
+    direction: outgoing
+    policy: allow
+  tags:
+    - ufw
+
+- name: enable UFW
+  ufw:
+    state: "enabled"
+    logging: "on"
+  tags:
+    - ufw
