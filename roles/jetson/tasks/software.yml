@@ -1,4 +1,7 @@
 ---
+#
+#  Software that all hosts with this role will need
+#
 - name: install software for Jetson Nano
   apt:
     name: "{{ packages }}"
@@ -6,15 +9,6 @@
     update_cache: yes
   vars:
     packages:
-      - python3-venv
-      - python3-dev     # needed for many python packages built from source
-      - python3-wheel   # for simplifying pip install
       - docker-compose
-# for installing docker-compose from pypi
-#     - libffi-dev      # for pip install docker-compose
-#     - libssl-dev      # for pip install docker-compose
-# try using NVIDIA HPC SDK instead: https://ngc.nvidia.com/catalog/containers/nvidia:nvhpc
-#     - gfortran
-#     - gfortran-doc
   tags:
     - sw

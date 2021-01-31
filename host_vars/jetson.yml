@@ -1,2 +1,11 @@
 ---
 swapsize_gb: 2      # set to 0 to disable play
+host_software:
+  - python3-venv
+  - python3-dev     # needed for many python packages built from source
+  - python3-wheel   # for simplifying pip install
+# for installing docker-compose from pypi
+# - libffi-dev      # for pip install docker-compose
+# - libssl-dev      # for pip install docker-compose
+# - gfortran
+# - gfortran-doc

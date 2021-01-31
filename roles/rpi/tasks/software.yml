@@ -30,12 +30,3 @@
       - penguinspuzzle
   tags:
     - sw
-
-- name: install additional host-specific software
-  apt:
-    name: "{{ myconfig.extra_software }}"
-    state: present
-    update_cache: yes
-  when: "'extra_software' in myconfig"
-  tags:
-    - sw

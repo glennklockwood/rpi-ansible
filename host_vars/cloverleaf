@@ -16,7 +16,6 @@ enable_serial: True
 enable_serial_hw: True
 enable_onewire: False
 enable_rgpio: False
-extra_software:
-  - "w3m"
-  - "irssi"
-  - "screen"
+host_software:
+  - w3m
+  - irssi

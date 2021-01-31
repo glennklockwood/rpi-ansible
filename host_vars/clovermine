@@ -18,7 +18,7 @@ enable_serial_hw: True
 enable_onewire: False
 enable_rgpio: False
 darshan_dev: True
-extra_software:
-  - "libglib2.0-dev"
-  - "libncurses-dev"
-  - "libperl-dev"
+host_software:
+  - libglib2.0-dev      # for irssi
+  - libncurses-dev      # for irssi
+  - libperl-dev         # for irssi

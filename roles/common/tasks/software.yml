@@ -13,3 +13,11 @@
       - ufw
   tags:
     - sw
+
+- name: install additional host-specific software
+  apt:
+    name: "{{ host_software | default([]) }}"
+    state: present
+    update_cache: yes
+  tags:
+    - sw

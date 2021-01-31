@@ -16,21 +16,16 @@ enable_serial: True
 enable_serial_hw: True
 enable_onewire: False
 enable_rgpio: False
-extra_software:
+host_software:
   - autoconf
-  - screen
-  # libpcre3-dev for tt++
-  - libpcre3-dev
-  # for irssi
-  - libncurses-dev
-  - libperl-dev
-  - libglib2.0-dev
-  # for the mud
-  - libyaml-dev
-  # for pelican
-  - python3-virtualenv
-  - python3-pandas
-  - python3-yaml
-  - python3-tabulate
-  - python3-markdown
-  - python3-bs4
+  - libpcre3-dev        # for tt++
+  - libncurses-dev      # for irssi
+  - libperl-dev         # for irssi
+  - libglib2.0-dev      # for irssi
+  - libyaml-dev         # for the mud
+  - python3-virtualenv  # for pelican
+  - python3-pandas      # for pelican
+  - python3-yaml        # for pelican
+  - python3-tabulate    # for pelican
+  - python3-markdown    # for pelican
+  - python3-bs4         # for pelican
