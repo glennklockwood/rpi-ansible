@@ -1,0 +1,4 @@
+---
+- hosts: raspberrypi
+  roles:
+    - common
