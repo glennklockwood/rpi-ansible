@@ -1,6 +1,6 @@
 # Raspberry Pi Ansible Playbook
 
-Glenn K. Lockwood, October 2018 - July 2020.
+Glenn K. Lockwood, October 2018 - January 2021.
 
 ## Introduction
 
@@ -8,10 +8,7 @@ This is an Ansible configuration that configures a fresh Raspbian installation
 on Raspberry Pi.  It can be run in local (pull) mode, where ansible is running
 on the same Raspberry Pi to be configured, or standard remote mode.
 
-This playbook is known to run on Raspbian stretch (9) and Raspberry Pi OS
-buster (10).  I've not been able to run it on jessie because that ships with
-Python 2.4, which is not supported by Ansible.  It can run against jessie in
-remote mode.  See below.
+This playbook is known to run on Raspberry Pi OS 11.
 
 ## Bootstrapping on Raspbian
 
@@ -47,7 +44,8 @@ which pollutes your login Python environment, but is better than nothing.
 
 The contents of each file in `host_vars/` is the intended configuration state
 for each Raspberry Pi.  Look at one of the examples included to get a feel for
-the configurations available.
+the configurations available.  Most variables should be optional, and if left
+undefined, do not enforce a specific configuration.
 
 To add local users, create and edit `roles/common/vars/users.yml`.  Follow the
 structure in `roles/common/vars/users.yml.example`.  You can/should
