@@ -43,3 +43,4 @@
 
 - include: swap.yml
 - include: software.yml
+- include: autofs.yml

@@ -1,0 +1,38 @@
+---
+- name: install autofs
+  apt:
+    name: autofs
+    state: present
+    update_cache: yes
+  tags:
+    - autofs
+    - sw
+
+- name: create mount point
+  file:
+    path: /synology
+    state: directory
+  tags:
+    - autofs
+
+- name: install autofs configs
+  copy:
+    src: '{{ item }}'
+    dest: '/{{ item }}'
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - etc/auto.synology
+    - etc/auto.master
+  notify:
+    - "reload autofs"
+  tags:
+    - autofs
+
+- name: ensure autofs is enabled
+  service:
+    name: autofs
+    state: started
+  tags:
+    - autofs

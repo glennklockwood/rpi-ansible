@@ -3,3 +3,8 @@
   service:
     name: docker
     state: restarted
+
+- name: "reload autofs"
+  service:
+    name: autofs
+    state: reloaded
