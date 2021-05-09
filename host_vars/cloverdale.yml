@@ -4,7 +4,7 @@ raspi_domain: "local"
 raspi_locale: "en_US.UTF-8"
 raspi_timezone: "America/Los_Angeles"
 xkblayout: "us"
-enable_gui: True
+enable_gui: False
 enable_autologin: False
 enable_bootwait: False
 enable_bootsplash: False
@@ -16,6 +16,7 @@ enable_serial: True
 enable_serial_hw: True
 enable_onewire: False
 enable_rgpio: False
+systemd_default_target: multi-user
 host_software:
   - autoconf
   - libpcre3-dev        # for tt++

@@ -1,3 +1,14 @@
 ---
+- name: "systemd: get default target"
+  command: "systemctl get-default"
+  register: current_systemd_default_target
+  when: "systemd_default_target | default(false)"
+  changed_when: False
+  check_mode: no
+
+- name: "systemd: set default target"
+  command: "systemctl set-default {{ systemd_default_target }}"
+  when: "systemd_default_target | default(false) and systemd_default_target != current_systemd_default_target.stdout.split('.')[0]"
+
 - include: software.yml
 - include: sshd.yml
