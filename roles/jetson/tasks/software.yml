@@ -12,3 +12,10 @@
       - docker-compose
   tags:
     - sw
+
+- name: remove ubuntu-desktop
+  apt:
+    name: "ubuntu-desktop"
+    state: absent
+    autoremove: yes
+    autoclean: yes
