@@ -5,6 +5,11 @@
   command: "timedatectl set-timezone {{ timezone }}"
   when: "timezone | default(false) and linux_tz != timezone"
 
+- name: "set locale"
+  script:
+    cmd: "set_locale.sh {{ locale }}"
+  when: "locale|default(false) and linux_locale != locale"
+
 - name: "systemd: get default target"
   command: "systemctl get-default"
   register: current_systemd_default_target
