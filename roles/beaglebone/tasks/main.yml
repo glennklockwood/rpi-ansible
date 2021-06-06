@@ -1,0 +1,10 @@
+---
+- name: disable USB networking
+  copy:
+    src: '{{ item }}'
+    dest: '/{{ item }}'
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - etc/default/bb-boot
