@@ -1,0 +1,27 @@
+---
+- name: get Beaglebone board type
+  command: "dd if=/sys/class/i2c-dev/i2c-0/device/0-0050/eeprom ibs=1 skip=4 count=8 status=none"
+  register: beaglebone_board # BNLT, BLNK, PBGL, etc
+  changed_when: False
+  check_mode: no
+  tags:
+    - beaglebone
+    - motd
+
+- name: get Beaglebone board revision
+  command: "dd if=/sys/class/i2c-dev/i2c-0/device/0-0050/eeprom ibs=1 skip=12 count=4 status=none"
+  register: beaglebone_rev # 00C0
+  changed_when: False
+  check_mode: no
+  tags:
+    - beaglebone
+    - motd
+
+- name: set beaglebone facts
+  set_fact:
+    beaglebone_board: "{{ beaglebone_board.stdout }}"
+    beaglebone_rev : "{{ beaglebone_rev.stdout }}"
+  check_mode: no
+  tags:
+    - beaglebone
+    - motd

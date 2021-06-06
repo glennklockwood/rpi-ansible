@@ -1,0 +1,48 @@
+---
+# Taken from https://github.com/beagleboard/u-boot/blob/55ac96a8461d06edfa89cda37459753397de268a/board/ti/am335x/board.h
+beaglebone_models:
+  A335BONE:
+    model: "BeagleBone"
+    mem: "MB"
+  A335BNLT:
+    model: "BeagleBone Black"
+    soc: "Texas Instruments AM3358"
+    cpu: "ARM Cortex-A8"
+    cores: 1
+    cpu_freq: "1 GHz"
+    mem: "512 MB DDR3"
+    emmc: "4 GB"
+    accelerators: "2x 200 MHz PRUs"
+  A335PBGL:
+    model: "PocketBeagle"
+    soc: "Texas Instruments AM3358"
+    cpu: "ARM Cortex-A8"
+    cores: 1
+    cpu_freq: "1 GHz"
+    mem: "512 MB DDR3"
+    accelerators: "2x 200 MHz PRUs"
+  A335X_SK:
+  A33515BB:
+  A335_ICE:
+  BBRDX15_:
+    model: "BeagleBoard-X15"
+    soc: "Texas Instruments AM5728"
+    cpu: "ARM Cortex-A15"
+    cores: 2
+    cpu_freq: "1.5 GHz"
+    mem: "2048 MB DDR3"
+    emmc: "16 GB"
+    accelerators: "4x 200 MHz PRUs, 2x C66x DSPs"
+  AM572PM_:
+  AM574IDK:
+  AM572IDK:
+  AM571IDK:
+  BBBBAI__:
+    model: "BeagleBone AI"
+    soc: "Texas Instruments AM5729"
+    cpu: "ARM Cortex-A15"
+    cores: 2
+    cpu_freq: "1.5 GHz"
+    mem: "1024 MB DDR3"
+    emmc: "16 GB"
+    accelerators: "4x 200 MHz PRUs, 4x EVE Vector Processors, 2x C66x DSPs"

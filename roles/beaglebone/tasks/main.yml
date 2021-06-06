@@ -1,4 +1,6 @@
 ---
+- include: beaglebone-facts.yml
+
 - name: disable USB networking
   copy:
     src: '{{ item }}'
@@ -8,3 +10,23 @@
     mode: 0644
   loop:
     - etc/default/bb-boot
+
+# Other tasks
+- include: users.yml
+
+# Set the MOTD
+- name: load BeagleBone hardware list
+  include_vars:
+    file: vars/beaglebone-models.yml
+  tags:
+    - motd
+
+- name: install motd
+  template:
+    src: etc/motd
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: "0644"
+  tags:
+    - motd
