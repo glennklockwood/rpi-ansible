@@ -1,8 +1,8 @@
 ---
+timezone: "America/Los_Angeles"
 raspi_hostname: "clovermine"
 raspi_domain: "local"
 raspi_locale: "en_US.UTF-8"
-raspi_timezone: "America/Los_Angeles"
 xkblayout: "us"
 wifi_country: "US"
 enable_gui: True

@@ -1,4 +1,10 @@
 ---
+- include: linux-facts.yml
+
+- name: "set timezone"
+  command: "timedatectl set-timezone {{ timezone }}"
+  when: "timezone | default(false) and linux_tz != timezone"
+
 - name: "systemd: get default target"
   command: "systemctl get-default"
   register: current_systemd_default_target

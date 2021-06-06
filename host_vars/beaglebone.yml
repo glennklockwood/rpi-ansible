@@ -1,2 +1,3 @@
 ---
+timezone: "America/Los_Angeles"
 systemd_default_target: multi-user

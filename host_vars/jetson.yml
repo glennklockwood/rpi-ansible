@@ -1,4 +1,5 @@
 ---
+timezone: "America/Los_Angeles"
 swapsize_gb: 0      # set to 0 to disable play
 systemd_default_target: multi-user
 host_software:
