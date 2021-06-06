@@ -1,0 +1,2 @@
+---
+systemd_default_target: multi-user
