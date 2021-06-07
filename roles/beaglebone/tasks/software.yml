@@ -1,0 +1,30 @@
+---
+- name: remove BeagleBone demo software
+  apt:
+    name: "{{ packages }}"
+    state: absent
+    autoremove: yes
+    purge: yes
+  vars:
+    packages:
+      - c9-core-installer
+      - bb-node-red-installer
+      - doc-beaglebone-getting-started
+      - bb-usb-gadgets
+      - bonescript
+      - bone101
+      - nodejs
+      - npm
+  tags:
+    - sw
+
+- name: remove unpackaged BeagleBone demo software
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/var/lib/cloud9"
+    - "/opt/cloud9"
+    - "/var/cache/doc-beaglebone-getting-started"
+    - "/usr/local/lib/node_modules"
+  tags: [ "sw" ]

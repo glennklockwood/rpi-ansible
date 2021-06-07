@@ -1,6 +1,11 @@
 ---
 - include: beaglebone-facts.yml
 
+- name: gather package state info
+  package_facts:
+    manager: auto
+  tags: [ "sw" ]
+
 - name: disable USB networking
   copy:
     src: '{{ item }}'
@@ -10,10 +15,20 @@
     mode: 0644
   loop:
     - etc/default/bb-boot
+  when: "'bb-usb-gadgets' in ansible_facts.packages"
 
 # See https://www.glennklockwood.com/sysadmin-howtos/beaglebone.html for more
 # info on what these services do (and why you may need them)
-- name: disable Cloud9, Node-RED, etc
+- name: disable cloud9
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  loop:
+    - cloud9.socket
+  when: "'c9-core-installer' in ansible_facts.packages"
+
+- name: disable nodered
   systemd:
     name: "{{ item }}"
     enabled: no
@@ -21,14 +36,28 @@
   loop:
     - nodered.service
     - nodered.socket
-    - cloud9.socket
+  when: "'bb-node-red-installer' in ansible_facts.packages"
+
+- name: disable bonescript
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  loop:
     - bonescript.service
     - bonescript.socket
     - bonescript-autorun.service
+  when: "'bonescript' in ansible_facts.packages"
+
+- name: disable other demo BeagleBone services
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  loop:
     - nginx.service
     - generic-board-startup.service
 
-# Get rid of pre-login banners that advertise username/password
 - name: get rid of pre-login banners
   file:
     path: "{{ item }}"
@@ -56,3 +85,4 @@
 
 # Other tasks
 - include: users.yml
+- include: software.yml
