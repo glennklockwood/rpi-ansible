@@ -47,8 +47,8 @@ for each Raspberry Pi.  Look at one of the examples included to get a feel for
 the configurations available.  Most variables should be optional, and if left
 undefined, do not enforce a specific configuration.
 
-To add local users, create and edit `roles/common/vars/users.yml`.  Follow the
-structure in `roles/common/vars/users.yml.example`.  You can/should
+To add local users, create and edit `roles/rpi/vars/users.yml`.  Follow the
+structure in `roles/rpi/vars/users.yml.example`.  You can/should
 `ansible-vault` this file.
 
 ## Using Local Mode

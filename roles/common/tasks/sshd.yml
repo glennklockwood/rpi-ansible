@@ -6,6 +6,7 @@
   local_action: "stat path=\"{{ role_path }}/files/{{ item }}.{{ inventory_hostname }}\""
   loop: "{{ ssh_host_key_files }}"
   register: result
+  become: false
   tags:
     - sshd
 

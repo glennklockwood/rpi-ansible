@@ -3,7 +3,6 @@
 
 # Gather facts specific to the Raspberry Pi platform
 - include: raspi-facts.yml
-- include: linux-facts.yml
 
 - name: set hostname
   shell: "raspi-config nonint do_hostname {{ raspi_hostname }}"
@@ -21,16 +20,6 @@
     dest=/etc/hosts
     regexp="^127.0.1.1"
     state=absent
-
-# Set timezone
-- name: set timezone
-  command: "timedatectl set-timezone {{ raspi_timezone }}"
-  when: linux_tz != raspi_timezone
-
-# Set locale
-- name: set locale
-  command: "raspi-config nonint do_change_locale {{ raspi_locale }}"
-  when: "locale|default(false) and linux_locale != raspi_locale"
 
 # Set X keyboard layout
 - name: set X11 keyboard layout

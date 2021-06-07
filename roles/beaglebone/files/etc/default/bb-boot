@@ -1,0 +1,8 @@
+# Default stored in /opt/scripts/boot/default/bb-boot
+#
+# See /opt/scripts/boot/am335x_evm.sh to understand valid options here
+#
+USB_NETWORK_DISABLED=yes
+USB_IMAGE_FILE_DISABLED=yes
+USB_CONFIGURATION=disable
+DNS_NAMESERVER=8.8.8.8

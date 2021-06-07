@@ -1,0 +1,4 @@
+---
+timezone: "America/Los_Angeles"
+locale: "en_US.UTF-8"
+systemd_default_target: multi-user
