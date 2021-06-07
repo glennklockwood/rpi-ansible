@@ -1,11 +1,8 @@
+# Default stored in /opt/scripts/boot/default/bb-boot
+#
+# See /opt/scripts/boot/am335x_evm.sh to understand valid options here
+#
+USB_NETWORK_DISABLED=yes
+USB_IMAGE_FILE_DISABLED=yes
 USB_CONFIGURATION=disable
-# USB0_SUBNET=192.168.7
-# USB0_ADDRESS=192.168.7.2
-# USB0_NETMASK=255.255.255.0
-
-# USB1_ENABLE=enable
-# USB1_SUBNET=192.168.6
-# USB1_ADDRESS=192.168.6.2
-# USB1_NETMASK=255.255.255.0
-
 DNS_NAMESERVER=8.8.8.8
