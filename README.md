@@ -1,14 +1,16 @@
 # Raspberry Pi Ansible Playbook
 
-Glenn K. Lockwood, October 2018 - January 2021.
+Glenn K. Lockwood, October 2018 - June 2021.
 
 ## Introduction
 
 This is an Ansible configuration that configures a fresh Raspbian installation
 on Raspberry Pi.  It can be run in local (pull) mode, where ansible is running
-on the same Raspberry Pi to be configured, or standard remote mode.
+on the same Raspberry Pi to be configured, or standard remote mode.  This
+playbook is known to run on Raspberry Pi OS 11.
 
-This playbook is known to run on Raspberry Pi OS 11.
+Also included are plays for use with other single-board computers including
+NVIDIA Jetson Nano and BeagleBone Black.
 
 ## Bootstrapping on Raspbian
 
@@ -51,6 +53,14 @@ To add local users, create and edit `roles/rpi/vars/users.yml`.  Follow the
 structure in `roles/rpi/vars/users.yml.example`.  You can/should
 `ansible-vault` this file.
 
+## Using Remote Mode
+
+Run one of the playbooks as you would do normally:
+
+    (ansible_env) $ ansible-playbook ./rpi.yml
+
+The default hosts file and `become_*` configurations are set in ansible.cfg.
+
 ## Using Local Mode
 
 Edit `local.yml` and add the mac address of `eth0` for the Raspberry Pi to
@@ -65,13 +75,8 @@ Then run the playbook:
 The playbook will self-discover its settings, then idempotently configure the
 Raspberry Pi.
 
-## Using Remote Mode
-
-Run one of the playbooks as you would do normally:
-
-    (ansible_env) $ ansible-playbook ./rpi.yml
-
-The default hosts file and `become_*` configurations are set in ansible.cfg.
+That said, it is better to use remote mode (so Ansible ssh'es into localhost)
+since that's what I most commonly test.
 
 ## After running the playbook
 
