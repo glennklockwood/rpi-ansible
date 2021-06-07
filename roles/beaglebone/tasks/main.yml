@@ -11,8 +11,31 @@
   loop:
     - etc/default/bb-boot
 
-# Other tasks
-- include: users.yml
+# See https://www.glennklockwood.com/sysadmin-howtos/beaglebone.html for more
+# info on what these services do (and why you may need them)
+- name: disable Cloud9, Node-RED, etc
+  systemd:
+    name: "{{ item }}"
+    enabled: no
+    state: stopped
+  loop:
+    - nodered.service
+    - nodered.socket
+    - cloud9.socket
+    - bonescript.service
+    - bonescript.socket
+    - bonescript-autorun.service
+    - nginx.service
+    - generic-board-startup.service
+
+# Get rid of pre-login banners that advertise username/password
+- name: get rid of pre-login banners
+  file:
+    path: "{{ item }}"
+    state: "absent"
+  loop:
+    - "/etc/issue"
+    - "/etc/issue.net"
 
 # Set the MOTD
 - name: load BeagleBone hardware list
@@ -30,3 +53,6 @@
     mode: "0644"
   tags:
     - motd
+
+# Other tasks
+- include: users.yml
