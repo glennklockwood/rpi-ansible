@@ -1,0 +1,34 @@
+---
+- name: install cpufrequtils
+  apt:
+    name: cpufrequtils
+    state: present
+    update_cache: yes
+  when: "cpufreq_governor | default(false)"
+  tags: [ "cpufreq" ]
+
+- name: enable cpufreq service
+  systemd:
+    name: cpufrequtils
+    enabled: yes
+    state: started
+  when: "cpufreq_governor | default(false)"
+  tags: [ "cpufreq" ]
+
+- name: install cpufrequtils config
+  template:
+    src: etc/default/cpufrequtils
+    dest: /etc/default/cpufrequtils
+    owner: root
+    group: root
+    mode: 0755
+  register: cpufreqconfig
+  when: "cpufreq_governor | default(false)"
+  tags: [ "cpufreq" ]
+
+- name: restart cpufrequtils service
+  systemd:
+    name: cpufrequtils
+    state: restarted
+  when: "cpufreq_governor | default(false) and cpufreqconfig.changed"
+  tags: [ "cpufreq" ]
