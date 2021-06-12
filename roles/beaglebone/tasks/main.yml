@@ -11,6 +11,8 @@
     dest: /boot/uEnv.txt
     regexp: '^[#\s]*disable_uboot_overlay_video=[01]'
     line: 'disable_uboot_overlay_video=1'
+  notify:
+    - reboot
 
 - name: disable USB networking
   copy:

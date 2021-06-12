@@ -1,0 +1,5 @@
+---
+- name: reboot
+  debug:
+    msg: "reboot required for {{ ansible_hostname }}"
+  #reboot:
