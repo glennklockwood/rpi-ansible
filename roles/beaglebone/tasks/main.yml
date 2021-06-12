@@ -6,6 +6,12 @@
     manager: auto
   tags: [ "sw" ]
 
+- name: disable HDMI virtual cape
+  lineinfile:
+    dest: /boot/uEnv.txt
+    regexp: '^[#\s]*disable_uboot_overlay_video=[01]'
+    line: 'disable_uboot_overlay_video=1'
+
 - name: disable USB networking
   copy:
     src: '{{ item }}'
