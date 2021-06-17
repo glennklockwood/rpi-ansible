@@ -3,3 +3,5 @@ timezone: "America/Los_Angeles"
 locale: "en_US.UTF-8"
 systemd_default_target: multi-user
 cpufreq_governor: ondemand
+target_hostname: blackhall
+target_domain: local

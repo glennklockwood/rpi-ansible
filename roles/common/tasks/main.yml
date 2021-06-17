@@ -1,6 +1,21 @@
 ---
 - include: linux-facts.yml
 
+- name: "set hostname"
+  hostname:
+    name: "{{ target_hostname }}.{{ target_domain }}"
+  when: "target_hostname | default(false) and target_domain | default(false)"
+  notify:
+    - reboot
+
+- name: "update /etc/hosts with new hostname"
+  lineinfile:
+    dest: "/etc/hosts"
+    regexp: "^{{ ansible_default_ipv4.address }}"
+    line: "{{ ansible_default_ipv4.address }}{{'\t'}}{{ target_hostname }}.{{ target_domain }}{{'\t'}}{{ target_hostname }}"
+    state: present
+  when: "target_hostname | default(false) and target_domain | default(false)"
+
 - name: "set timezone"
   command: "timedatectl set-timezone {{ timezone }}"
   when: "timezone | default(false) and linux_tz != timezone"

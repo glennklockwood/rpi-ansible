@@ -4,17 +4,6 @@
 # Gather facts specific to the Raspberry Pi platform
 - include: raspi-facts.yml
 
-- name: set hostname
-  shell: "raspi-config nonint do_hostname {{ raspi_hostname }}"
-  when: current_hostname != raspi_hostname
-
-- name: update /etc/hosts with new hostname
-  lineinfile:
-    dest=/etc/hosts
-    regexp="^{{ ansible_default_ipv4.address }}"
-    line="{{ ansible_default_ipv4.address }}{{'\t'}}{{ raspi_hostname }}.{{ raspi_domain }}{{'\t'}}{{ raspi_hostname }}"
-    state=present
-
 - name: get rid of default 127.0.1.1 binding
   lineinfile:
     dest=/etc/hosts

@@ -1,5 +1,5 @@
 jetson      ansible_host=jetson.local
-beaglebone  ansible_host=beaglebone.local
+blackhall   ansible_host=blackhall.local
 
 [raspberrypi]
 cloverdale  ansible_host=cloverdale.local

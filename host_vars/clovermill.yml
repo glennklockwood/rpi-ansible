@@ -1,8 +1,8 @@
 ---
 timezone: "America/Los_Angeles"
 locale: "en_US.UTF-8"
-raspi_hostname: "clovermill"
-raspi_domain: "local"
+target_hostname: "clovermill"
+target_domain: "local"
 xkblayout: "us"
 wifi_country: "US"
 enable_gui: False

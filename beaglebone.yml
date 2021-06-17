@@ -1,5 +1,5 @@
 ---
-- hosts: beaglebone
+- hosts: blackhall
   module_defaults:
     apt:
       cache_valid_time: 3600

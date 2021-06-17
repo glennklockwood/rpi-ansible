@@ -37,7 +37,7 @@
 - name: assert that configuration is loaded
   assert:
     that:
-      - "raspi_hostname | default(false)"
+      - "target_hostname | default(false)"
 
 - debug:
-    msg: "loaded configuration for {{ raspi_hostname }}"
+    msg: "loaded configuration for {{ target_hostname }}"
