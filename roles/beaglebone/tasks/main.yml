@@ -25,6 +25,20 @@
     - etc/default/bb-boot
   when: "'bb-usb-gadgets' in ansible_facts.packages"
 
+# wireless access point will still be running after this play.  you can just
+# re-run /usr/bin/bb-wl18xx-wlan0 to pick up this new configuration and
+# disable the access point, but this playbook also uninstalls
+# /usr/bin/bb-wl18xx-wlan0 and requires a reboot.
+- name: disable wireless access point on boot
+  lineinfile:
+    dest: "/etc/default/bb-wl18xx"
+    regexp: "^TETHER_ENABLED="
+    line: "TETHER_ENABLED=no"
+    state: present
+  notify:
+    - reboot
+
+
 # See https://www.glennklockwood.com/sysadmin-howtos/beaglebone.html for more
 # info on what these services do (and why you may need them)
 - name: disable cloud9
