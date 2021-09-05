@@ -1,0 +1,16 @@
+# Disables the default user in supported embedded Linux OS images.  Only run
+# after you've created an alternative privileged user!
+---
+- hosts: all
+  tasks:
+    - name: get user list
+      getent:
+        database: passwd
+    - name: lock default user
+      user:
+        name: "{{ item }}"
+        password_lock: true
+      with_items:
+        - pi
+        - debian
+      when: "item in getent_passwd"

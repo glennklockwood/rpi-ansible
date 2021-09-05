@@ -82,15 +82,6 @@ host.  This will also make sure that your step 1 above was done correctly.
 **Step 3:** Run the Ansible playbook to create new users and do most of the
 system configuration
 
-**Step 4:** Set a password for new user(s) created by Ansible by logging in as
-the default privileged user (`pi`) and `sudo passwd username`.  This is required
-for the new user(s) to be able to sudo.
-
-After you run the playbook, the Raspberry Pi is configured, and your new user(s)
-have been created and passwords set, delete the changes you made to
-`~/.ssh/config` so that you can disable the default user and switch to using
-the new user that Ansible created.
-
 ## Using Local Mode
 
 Edit `local.yml` and add the mac address of `eth0` for the Raspberry Pi to
@@ -113,12 +104,19 @@ since that's what I most commonly test.
 This playbook purposely requires a few manual steps _after_ running the playbook
 to ensure that it does not lock you out of your Raspberry Pi.
 
-1. While logged in as pi, `sudo passwd glock` (or whatever username you created)
+1. If using remote mode, delete the changes you made to `~/.ssh/config` so
+   that you switch to using the new user that Ansible created for subsequent
+   Ansible connections.
+
+2. While logged in as pi, `sudo passwd glock` (or whatever username you created)
    to set a password for that user.  This is _not_ required to log in as that
    user, but it _is_ required to `sudo` as that user.  You may also choose to
    set a password for the pi and/or root users.
 
-2. `usermod --lock pi` to ensure that the default user is completely disabled.
+3. `usermod --lock pi` to ensure that the default user is completely disabled.
+
+You can also use the `lock-default-user.yml` standalone playbook to disable
+the default users for all the supported board-specific roles.
 
 ## Optional configurations
 
