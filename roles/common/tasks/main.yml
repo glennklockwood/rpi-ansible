@@ -8,12 +8,13 @@
   notify:
     - reboot
 
-- name: "update /etc/hosts with new hostname"
-  lineinfile:
-    dest: "/etc/hosts"
-    regexp: "^{{ ansible_default_ipv4.address }}"
-    line: "{{ ansible_default_ipv4.address }}{{'\t'}}{{ target_hostname }}.{{ target_domain }}{{'\t'}}{{ target_hostname }}"
-    state: present
+- name: "template out /etc/hosts"
+  template:
+    src: etc/hosts
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0755
   when: "target_hostname | default(false) and target_domain | default(false)"
 
 - name: "set timezone"
