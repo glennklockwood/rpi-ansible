@@ -132,6 +132,17 @@ This playbook can install ssh host keys.  To do so,
 
 The playbook will detect the presence of these files and install them.
 
+## Adding a new host to an existing role
+
+In broad strokes, the process for adding a new host whose board-specific role
+already exists is
+
+1. Add the new host to `hosts`.
+2. Creating `host_vars/newhost.yml` and filling it out appropriately.  It's
+   easiest to start with an existing file for the same board type (e.g.,
+   `cloverdale.yml` for Raspberry Pi) and change it.  Be sure to change the
+   `target_hostname` variable at minimum.
+
 ## Acknowledgment
 
 I stole a lot of knowledge from https://github.com/giuaig/ansible-raspi-config/.

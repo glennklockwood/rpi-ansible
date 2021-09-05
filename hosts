@@ -1,4 +1,6 @@
 jetson      ansible_host=jetson.local
+
+[beaglebone]
 blackhall   ansible_host=blackhall.local
 whitehaven  ansible_host=whitehaven.local
 
