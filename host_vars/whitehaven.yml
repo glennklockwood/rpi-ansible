@@ -5,3 +5,5 @@ systemd_default_target: multi-user
 cpufreq_governor: ondemand
 target_hostname: whitehaven
 target_domain: local
+host_software:
+  - python3-venv
