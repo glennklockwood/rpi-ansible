@@ -1,4 +1,10 @@
 ---
+- name: remove holds on BeagleBone demo software
+  dpkg_selections:
+    name: c9-core-installer
+    selection: purge
+  when: "'c9-core-installer' in ansible_facts.packages"
+
 - name: remove BeagleBone demo software
   apt:
     name: "{{ packages }}"
