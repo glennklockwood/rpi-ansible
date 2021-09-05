@@ -79,9 +79,17 @@ hasn't yet been from the default.
 **Step 2:** `ssh-copy-id mynewrpi` to ensure passwordless SSH works to the new
 host.  This will also make sure that your step 1 above was done correctly.
 
-After you run the playbook at the Raspberry Pi is configured, delete the changes
-you made to `~/.ssh/config` so that you can disable the default user and switch
-to using the new user that Ansible created.
+**Step 3:** Run the Ansible playbook to create new users and do most of the
+system configuration
+
+**Step 4:** Set a password for new user(s) created by Ansible by logging in as
+the default privileged user (`pi`) and `sudo passwd username`.  This is required
+for the new user(s) to be able to sudo.
+
+After you run the playbook, the Raspberry Pi is configured, and your new user(s)
+have been created and passwords set, delete the changes you made to
+`~/.ssh/config` so that you can disable the default user and switch to using
+the new user that Ansible created.
 
 ## Using Local Mode
 
