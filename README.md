@@ -61,6 +61,28 @@ Run one of the playbooks as you would do normally:
 
 The default hosts file and `become_*` configurations are set in ansible.cfg.
 
+If you are bootstrapping a completely fresh system with the default users and
+hostnames, you may have to do the following:
+
+**Step 1:** Add a config to `~/.ssh/config` to map your intended hostname to
+the IP address of your fresh system.  For example,
+
+```
+Host mynewrpi
+    Hostname 192.168.1.101
+    User pi
+```
+   
+This allows, for example, `ssh mynewrpi` to work even if `mynewrpi`'s hostname
+hasn't yet been from the default.
+
+**Step 2:** `ssh-copy-id mynewrpi` to ensure passwordless SSH works to the new
+host.  This will also make sure that your step 1 above was done correctly.
+
+After you run the playbook at the Raspberry Pi is configured, delete the changes
+you made to `~/.ssh/config` so that you can disable the default user and switch
+to using the new user that Ansible created.
+
 ## Using Local Mode
 
 Edit `local.yml` and add the mac address of `eth0` for the Raspberry Pi to
