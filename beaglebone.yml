@@ -1,5 +1,7 @@
 ---
-- hosts: blackhall
+- hosts:
+    - blackhall
+    - whitehaven
   module_defaults:
     apt:
       cache_valid_time: 3600
