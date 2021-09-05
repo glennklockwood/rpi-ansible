@@ -4,12 +4,12 @@
 {% if beaglebone_board in beaglebone_models %}
 {{ beaglebone_models[beaglebone_board].model }} Rev {{ beaglebone_rev | regex_replace('^0*|0*$', '') }}
 - {{ beaglebone_models[beaglebone_board].soc}}
-- {{ ansible_processor_count }}x {{ beaglebone_models[beaglebone_board].cpu_freq }} {{ beaglebone_models[beaglebone_board].cpu }} core{% if ansible_processor_count > 1 %}s{% endif %}
+- {{ ansible_processor_count }}x {{ beaglebone_models[beaglebone_board].cpu_freq }} {{ beaglebone_models[beaglebone_board].cpu }} {% if ansible_processor_count > 1 %}cores{% else %}core{% endif %}
 - {{ beaglebone_models[beaglebone_board].mem }} RAM
 - {{ beaglebone_models[beaglebone_board].get("accelerators") }}
 {% else %}
 BeagleBone {{ beaglebone_board }}
-{{ ansible_processor_count }} core{% if ansible_processor_count > 1 %}s{% endif %}, {{ ansible_memtotal_mb }} MB RAM
-{% endif %} 
+{{ ansible_processor_count }} {% if ansible_processor_count > 1 %}cores{% else %}core{% endif %}, {{ ansible_memtotal_mb }} MB RAM
+{% endif %}
 {{ ansible_lsb.description }}
 --------------------------------------------------------------------------------
