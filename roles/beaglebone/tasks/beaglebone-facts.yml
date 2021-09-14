@@ -1,7 +1,31 @@
 ---
+- name: check for board identifier eeprom
+  stat:
+    path: "/sys/class/i2c-dev/i2c-0/device/0-0050/eeprom"
+  register: boardid_eeprom
+  tags:
+    - beaglebone
+    - motd
+
+- name: set board identifier to eeprom
+  set_fact:
+    beaglebone_eeprom: "/sys/class/i2c-dev/i2c-0/device/0-0050/eeprom"
+  when: boardid_eeprom.stat.exists
+  tags:
+    - beaglebone
+    - motd
+
+- name: set board identifier to linear boot partition 
+  set_fact:
+    beaglebone_eeprom: "/dev/mmcblk1boot1"
+  when: not boardid_eeprom.stat.exists
+  tags:
+    - beaglebone
+    - motd
+
 - name: get BeagleBone board type
-  command: "dd if=/sys/class/i2c-dev/i2c-0/device/0-0050/eeprom ibs=1 skip=4 count=8 status=none"
-  register: beaglebone_board # BNLT, BLNK, PBGL, etc
+  command: "dd if={{ beaglebone_eeprom }} ibs=1 skip=4 count=8 status=none"
+  register: beaglebone_board # BNLT, BLNK, PBGL, BBONE-AI, etc
   changed_when: False
   check_mode: no
   tags:
@@ -9,8 +33,8 @@
     - motd
 
 - name: get BeagleBone board revision
-  command: "dd if=/sys/class/i2c-dev/i2c-0/device/0-0050/eeprom ibs=1 skip=12 count=4 status=none"
-  register: beaglebone_rev # 00C0
+  command: "dd if={{ beaglebone_eeprom }} ibs=1 skip=12 count=4 status=none"
+  register: beaglebone_rev # 00C0, 00A1
   changed_when: False
   check_mode: no
   tags:

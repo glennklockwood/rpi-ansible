@@ -3,16 +3,21 @@
 beaglebone_models:
   A335BONE:
     model: "BeagleBone"
-    mem: "MB"
+    soc: "Texas Instruments AM3359"
+    cpu: "ARM Cortex-A8"
+    cores: 1
+    cpu_freq: "800 MHz"
+    mem: "256 MB DDR2-400"
+    accelerators: "2x 200 MHz PRU real-time units"
   A335BNLT:
     model: "BeagleBone Black"
     soc: "Texas Instruments AM3358"
     cpu: "ARM Cortex-A8"
     cores: 1
     cpu_freq: "1 GHz"
-    mem: "512 MB DDR3"
+    mem: "512 MB DDR3L-800"
     emmc: "4 GB"
-    accelerators: "2x 200 MHz PRUs"
+    accelerators: "2x 200 MHz PRU real-time units"
   A335PBGL:
     model: "PocketBeagle"
     soc: "Texas Instruments AM3358"
@@ -20,7 +25,7 @@ beaglebone_models:
     cores: 1
     cpu_freq: "1 GHz"
     mem: "512 MB DDR3"
-    accelerators: "2x 200 MHz PRUs"
+    accelerators: "2x 200 MHz PRU real-time units"
   A335X_SK:
   A33515BB:
   A335_ICE:
@@ -32,17 +37,24 @@ beaglebone_models:
     cpu_freq: "1.5 GHz"
     mem: "2048 MB DDR3"
     emmc: "16 GB"
-    accelerators: "4x 200 MHz PRUs, 2x C66x DSPs"
+    accelerators: 
+      - "2x 213 MHz ARM Cortex-M4 cores"
+      - "2x 700 MHz C66x digital signal processors"
+      - "4x 200 MHz PRU real-time units"
   AM572PM_:
   AM574IDK:
   AM572IDK:
   AM571IDK:
-  BBBBAI__:
+  BBONE-AI:
     model: "BeagleBone AI"
     soc: "Texas Instruments AM5729"
     cpu: "ARM Cortex-A15"
     cores: 2
     cpu_freq: "1.5 GHz"
-    mem: "1024 MB DDR3"
+    mem: "1024 MB DDR3L-1066"
     emmc: "16 GB"
-    accelerators: "4x 200 MHz PRUs, 4x EVE Vector Processors, 2x C66x DSPs"
+    accelerators:
+      - "4x 213 MHz ARM Cortex-M4 cores"
+      - "4x 650 MHz EVE deep learning accelerators"
+      - "2x 750 MHz C66x digital signal processors"
+      - "4x 200 MHz PRU real-time units"

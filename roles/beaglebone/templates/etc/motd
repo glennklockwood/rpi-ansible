@@ -1,15 +1,28 @@
+#jinja2: keep_trailing_newline:True
 --------------------------------------------------------------------------------
 {{ ansible_hostname }}
+{% if ansible_processor_count > 1 %}
+{%     set cores_plural = 'cores' %}
+{% else %}
+{%     set cores_plural = 'core' %}
+{% endif %}
 
 {% if beaglebone_board in beaglebone_models %}
 {{ beaglebone_models[beaglebone_board].model }} Rev {{ beaglebone_rev | regex_replace('^0*|0*$', '') }}
 - {{ beaglebone_models[beaglebone_board].soc}}
-- {{ ansible_processor_count }}x {{ beaglebone_models[beaglebone_board].cpu_freq }} {{ beaglebone_models[beaglebone_board].cpu }} {% if ansible_processor_count > 1 %}cores{% else %}core{% endif %}
+- {{ ansible_processor_count }}x {{ beaglebone_models[beaglebone_board].cpu_freq }} {{ beaglebone_models[beaglebone_board].cpu }} {{ cores_plural }}
 - {{ beaglebone_models[beaglebone_board].mem }} RAM
+{% if beaglebone_models[beaglebone_board].get("accelerators") is string %}
 - {{ beaglebone_models[beaglebone_board].get("accelerators") }}
+{% else %}
+{% for accel in beaglebone_models[beaglebone_board].get("accelerators") %}
+- {{ accel }}
+{% endfor %}
+{% endif %}
 {% else %}
 BeagleBone {{ beaglebone_board }}
 {{ ansible_processor_count }} {% if ansible_processor_count > 1 %}cores{% else %}core{% endif %}, {{ ansible_memtotal_mb }} MB RAM
 {% endif %}
+
 {{ ansible_lsb.description }}
 --------------------------------------------------------------------------------
