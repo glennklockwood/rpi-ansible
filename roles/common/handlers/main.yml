@@ -3,3 +3,8 @@
   debug:
     msg: "reboot required for {{ ansible_hostname }}"
   #reboot:
+
+- name: "reload autofs"
+  service:
+    name: autofs
+    state: reloaded

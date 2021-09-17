@@ -5,3 +5,7 @@ systemd_default_target: multi-user
 cpufreq_governor: conservative
 target_hostname: greystone
 target_domain: local
+autofs: # remember to enable mount access from the filer side too
+  - src: "synology.local:/volume1/glock/1024"
+    dest: "/synology"
+    opts: "-retry=0,tcp,soft,rw,vers=3"

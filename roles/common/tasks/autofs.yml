@@ -1,0 +1,53 @@
+---
+- name: install autofs
+  apt:
+    name: autofs
+    state: present
+    update_cache: yes
+  when: "autofs | default(false)"
+  tags:
+    - autofs
+    - sw
+
+- name: install autofs master
+  copy:
+    src: 'etc/auto.master'
+    dest: '/etc/auto.master'
+    owner: root
+    group: root
+    mode: 0644
+  when: "autofs | default(false)"
+  notify:
+    - "reload autofs"
+  tags:
+    - autofs
+
+- name: install autofs map file
+  template:
+    src: 'etc/auto.nfs'
+    dest: '/etc/auto.nfs'
+    owner: root
+    group: root
+    mode: 0644
+  when: "autofs | default(false)"
+  notify:
+    - "reload autofs"
+  tags:
+    - autofs
+
+- name: create mount point
+  file:
+    path: "{{ item['dest'] }}"
+    state: directory
+  loop: "{{ autofs }}"
+  when: "autofs | default(false)"
+  tags:
+    - autofs
+
+- name: ensure autofs is enabled
+  service:
+    name: autofs
+    state: started
+  when: "autofs | default(false)"
+  tags:
+    - autofs

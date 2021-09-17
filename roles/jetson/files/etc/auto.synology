@@ -1,4 +1,0 @@
-#
-#  This file is controlled by ansible - do not modify directly!
-#
-/synology  -retry=0,tcp,soft,rw,vers=3  synology.local:/volume1/glock

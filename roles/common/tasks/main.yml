@@ -40,3 +40,4 @@
 - include: software.yml
 - include: sshd.yml
 - include: cpufreq.yml
+- include: autofs.yml

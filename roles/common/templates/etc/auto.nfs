@@ -1,0 +1,6 @@
+#
+#  This file is controlled by ansible - do not modify directly!
+#
+{% for mount in autofs %}
+{{ mount["dest"] }} {{ mount["opts"] }} {{ mount["src"] }}
+{% endfor %}
