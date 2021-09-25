@@ -9,3 +9,5 @@ autofs: # remember to enable mount access from the filer side too
   - src: "synology.local:/volume1/glock/1024"
     dest: "/synology"
     opts: "-retry=0,tcp,soft,rw,vers=3"
+host_software:
+  - python3-venv
